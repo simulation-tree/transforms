@@ -2,6 +2,7 @@
 Calculates 3D transformations for objects within a hierarchy.
 
 ### Dependencies
+* [Simulation](https://github.com/game-simulations/simulation)
 
 ### Behaviour
 1. All behaviour occurs when the `TransformUpdate` event is invoked
