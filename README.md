@@ -5,16 +5,14 @@ Calculates 3D transformations for objects within a hierarchy.
 * [Simulation](https://github.com/game-simulations/simulation)
 
 ### Behaviour
-1. All behaviour occurs when the `TransformUpdate` event is invoked
-2. Entities with an `IsTransform` component will also have a `LocalToWorld` component built,
-using data on the entity from these components:
+1. All systems perform when the `TransformUpdate` event is invoked
+2. Entities with an `IsTransform` component will have a `LocalToWorld` component built
+using data from these components (relative to the parent entity):
 * `Position`
 * `Rotation`
-* `EulerAngles`
 * `Scale`
-
-3. When an entity has both a `Rotation` and a `EulerAngles` component, the rotation will always
-be preferred.
+3. When a transform entity has an `EulerAngles` component, a `Rotation` component
+will be updated before transform calculation occurs
 
 ### Example
 ```cs

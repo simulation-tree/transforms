@@ -2,34 +2,18 @@
 using System;
 using System.Numerics;
 using Transforms.Components;
+using Unmanaged;
 
 namespace Transforms
 {
-    public readonly struct Transform : IDisposable
+    public readonly struct Transform : ITransform, IDisposable
     {
         public readonly Entity entity;
 
-        public readonly Vector3 Position
-        {
-            get => entity.GetComponent<Position>().value;
-            set => entity.GetComponentRef<Position>().value = value;
-        }
+        World IEntity.World => entity.world;
+        eint IEntity.Value => entity.value;
 
-        public readonly Vector3 Scale
-        {
-            get => entity.GetComponent<Scale>().value;
-            set => entity.GetComponentRef<Scale>().value = value;
-        }
-
-        public readonly Quaternion Rotation
-        {
-            get => entity.GetComponent<Rotation>().value;
-            set => entity.GetComponentRef<Rotation>().value = value;
-        }
-
-        public readonly bool IsDestroyed => entity.IsDestroyed;
-
-        public Transform(World world, EntityID existingEntity)
+        public Transform(World world, eint existingEntity)
         {
             entity = new(world, existingEntity);
         }
@@ -45,6 +29,11 @@ namespace Transforms
         public readonly void Dispose()
         {
             entity.Dispose();
+        }
+        
+        public static Query GetQuery(World world)
+        {
+            return new Query(world, RuntimeType.Get<IsTransform>());
         }
     }
 }

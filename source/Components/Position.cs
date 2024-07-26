@@ -22,10 +22,5 @@ namespace Transforms.Components
         {
             value = new Vector3(x, y, z);
         }
-
-        public Vector2 AsVector2()
-        {
-            return new(value.X, value.Y);
-        }
     }
 }

@@ -8,10 +8,12 @@ namespace Transforms.Components
 
         public Quaternion value;
 
+#if NET5_0_OR_GREATER
         public Rotation()
         {
             value = Quaternion.Identity;
         }
+#endif
 
         public Rotation(Quaternion value)
         {
