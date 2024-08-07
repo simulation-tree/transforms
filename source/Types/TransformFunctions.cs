@@ -20,6 +20,11 @@ public static class TransformFunctions
         entity.GetComponentRef<T, Position>().value = value;
     }
 
+    public static void SetPosition<T>(this T entity, float x, float y, float z) where T : IPosition
+    {
+        entity.SetPosition(new Vector3(x, y, z));
+    }
+
     /// <summary>
     /// Retrieves the <see cref="Rotation"/> value.
     /// </summary>
@@ -50,5 +55,10 @@ public static class TransformFunctions
     public static void SetScale<T>(this T entity, Vector3 value) where T : IScale
     {
         entity.GetComponentRef<T, Scale>().value = value;
+    }
+
+    public static void SetScale<T>(this T entity, float x, float y, float z) where T : IScale
+    {
+        entity.SetScale(new Vector3(x, y, z));
     }
 }
