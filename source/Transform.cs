@@ -26,12 +26,17 @@ namespace Transforms
             entity.AddComponent(new Rotation(rotation));
         }
 
+        public readonly override string ToString()
+        {
+            return entity.ToString();
+        }
+
         public readonly void Dispose()
         {
             entity.Dispose();
         }
         
-        public static Query GetQuery(World world)
+        static Query IEntity.GetQuery(World world)
         {
             return new Query(world, RuntimeType.Get<IsTransform>());
         }

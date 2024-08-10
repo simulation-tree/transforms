@@ -8,6 +8,11 @@ namespace Transforms.Components
 
         public Vector3 value;
 
+        public Scale()
+        {
+            value = Vector3.One;
+        }
+
         public Scale(Vector2 value, float z = 1f)
         {
             this.value = new(value, z);
