@@ -24,7 +24,7 @@ public static class TransformFunctions
         return entity.GetComponent(new Position()).value;
     }
 
-    public static ref Vector3 GetPositionRef<T>(this T entity) where T : IPosition
+    public unsafe static ref Vector3 GetPositionRef<T>(this T entity) where T : IPosition
     {
         ref Position position = ref entity.TryGetComponentRef<T, Position>(out bool contains);
         if (!contains)
@@ -32,7 +32,11 @@ public static class TransformFunctions
             position = ref entity.AddComponentRef<T, Position>();
         }
 
-        return ref position.value;
+        //return ref position.value;
+        fixed (Vector3* ptr = &position.value)
+        {
+            return ref *ptr;
+        }
     }
 
     /// <summary>
@@ -61,7 +65,7 @@ public static class TransformFunctions
         return entity.GetComponent(new Rotation()).value;
     }
 
-    public static ref Quaternion GetRotationRef<T>(this T entity) where T : IRotation
+    public unsafe static ref Quaternion GetRotationRef<T>(this T entity) where T : IRotation
     {
         ref Rotation rotation = ref entity.TryGetComponentRef<T, Rotation>(out bool contains);
         if (!contains)
@@ -70,7 +74,11 @@ public static class TransformFunctions
             rotation = Rotation.Default;
         }
 
-        return ref rotation.value;
+        //return ref rotation.value;
+        fixed (Quaternion* ptr = &rotation.value)
+        {
+            return ref *ptr;
+        }
     }
 
     /// <summary>
@@ -118,7 +126,7 @@ public static class TransformFunctions
         return entity.GetComponent(new Scale()).value;
     }
 
-    public static ref Vector3 GetScaleRef<T>(this T entity) where T : IScale
+    public unsafe static ref Vector3 GetScaleRef<T>(this T entity) where T : IScale
     {
         ref Scale scale = ref entity.TryGetComponentRef<T, Scale>(out bool contains);
         if (!contains)
@@ -127,7 +135,11 @@ public static class TransformFunctions
             scale = Scale.Default;
         }
 
-        return ref scale.value;
+        //return ref scale.value;
+        fixed (Vector3* ptr = &scale.value)
+        {
+            return ref *ptr;
+        }
     }
 
     /// <summary>

@@ -35,8 +35,8 @@ namespace Transforms
         {
             entity.Dispose();
         }
-        
-        static Query IEntity.GetQuery(World world)
+
+        Query IEntity.GetQuery(World world)
         {
             return new Query(world, RuntimeType.Get<IsTransform>());
         }

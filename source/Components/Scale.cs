@@ -8,10 +8,12 @@ namespace Transforms.Components
 
         public Vector3 value;
 
+#if NET5_0_OR_GREATER
         public Scale()
         {
             value = Vector3.One;
         }
+#endif
 
         public Scale(Vector2 value, float z = 1f)
         {
