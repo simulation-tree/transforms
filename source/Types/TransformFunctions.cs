@@ -26,7 +26,13 @@ public static class TransformFunctions
 
     public static ref Vector3 GetPositionRef<T>(this T entity) where T : IPosition
     {
-        return ref entity.GetComponentRef<T, Position>().value;
+        ref Position position = ref entity.TryGetComponentRef<T, Position>(out bool contains);
+        if (!contains)
+        {
+            position = ref entity.AddComponentRef<T, Position>();
+        }
+
+        return ref position.value;
     }
 
     /// <summary>
@@ -57,7 +63,14 @@ public static class TransformFunctions
 
     public static ref Quaternion GetRotationRef<T>(this T entity) where T : IRotation
     {
-        return ref entity.GetComponentRef<T, Rotation>().value;
+        ref Rotation rotation = ref entity.TryGetComponentRef<T, Rotation>(out bool contains);
+        if (!contains)
+        {
+            rotation = ref entity.AddComponentRef<T, Rotation>();
+            rotation = Rotation.Default;
+        }
+
+        return ref rotation.value;
     }
 
     /// <summary>
@@ -107,7 +120,14 @@ public static class TransformFunctions
 
     public static ref Vector3 GetScaleRef<T>(this T entity) where T : IScale
     {
-        return ref entity.GetComponentRef<T, Scale>().value;
+        ref Scale scale = ref entity.TryGetComponentRef<T, Scale>(out bool contains);
+        if (!contains)
+        {
+            scale = ref entity.AddComponentRef<T, Scale>();
+            scale = Scale.Default;
+        }
+
+        return ref scale.value;
     }
 
     /// <summary>
