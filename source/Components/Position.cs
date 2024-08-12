@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace Transforms.Components
 {
@@ -21,6 +22,25 @@ namespace Transforms.Components
         public Position(float x, float y, float z = 0f)
         {
             value = new Vector3(x, y, z);
+        }
+
+        public readonly override string ToString()
+        {
+            Span<char> buffer = stackalloc char[256];
+            int length = ToString(buffer);
+            return new string(buffer[..length]);
+        }
+
+        public readonly int ToString(Span<char> buffer)
+        {
+            value.X.TryFormat(buffer, out int written);
+            buffer[written++] = ',';
+            buffer[written++] = ' ';
+            value.Y.TryFormat(buffer[written..], out int writtenY);
+            buffer[written + writtenY++] = ',';
+            buffer[written + writtenY++] = ' ';
+            value.Z.TryFormat(buffer[(written + writtenY)..], out int writtenZ);
+            return written + writtenY + writtenZ;
         }
     }
 }
