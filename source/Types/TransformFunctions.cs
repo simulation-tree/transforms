@@ -62,7 +62,7 @@ public static class TransformFunctions
     /// </summary>
     public static Quaternion GetRotation<T>(this T entity) where T : IRotation
     {
-        return entity.GetComponent(new Rotation()).value;
+        return entity.GetComponent(Rotation.Default).value;
     }
 
     public unsafe static ref Quaternion GetRotationRef<T>(this T entity) where T : IRotation
@@ -123,7 +123,7 @@ public static class TransformFunctions
     /// </summary>
     public static Vector3 GetScale<T>(this T entity) where T : IScale
     {
-        return entity.GetComponent(new Scale()).value;
+        return entity.GetComponent(Scale.Default).value;
     }
 
     public unsafe static ref Vector3 GetScaleRef<T>(this T entity) where T : IScale
