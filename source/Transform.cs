@@ -105,6 +105,7 @@ namespace Transforms
             entity.AddComponent(new Position(position));
             entity.AddComponent(new Scale(scale));
             entity.AddComponent(new Rotation(rotation));
+            entity.AddComponent(new IsTransform());
         }
 
         public readonly override string ToString()
