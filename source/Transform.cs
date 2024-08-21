@@ -91,8 +91,8 @@ namespace Transforms
             }
         }
 
-        World IEntity.World => entity.world;
-        eint IEntity.Value => entity.value;
+        World IEntity.World => entity;
+        eint IEntity.Value => entity;
 
         public Transform(World world, eint existingEntity)
         {
