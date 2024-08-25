@@ -99,6 +99,15 @@ namespace Transforms
             entity = new(world, existingEntity);
         }
 
+        public Transform(World world)
+        {
+            entity = new(world);
+            entity.AddComponent(Components.Position.Default);
+            entity.AddComponent(Components.Scale.Default);
+            entity.AddComponent(Components.Rotation.Default);
+            entity.AddComponent(new IsTransform());
+        }
+
         public Transform(World world, Vector3 position, Vector3 scale, Quaternion rotation)
         {
             entity = new(world);
@@ -121,6 +130,11 @@ namespace Transforms
         Query IEntity.GetQuery(World world)
         {
             return new Query(world, RuntimeType.Get<IsTransform>());
+        }
+
+        public static implicit operator Entity(Transform transform)
+        {
+            return transform.entity;
         }
     }
 }
