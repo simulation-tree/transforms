@@ -4,7 +4,7 @@ namespace Transforms.Components
 {
     public struct LocalToWorld
     {
-        public static readonly LocalToWorld Identity = new(Matrix4x4.Identity);
+        public static readonly LocalToWorld Default = new(Components.Position.Default.value, Components.Rotation.Default.value, Components.Scale.Default.value);
 
         public Matrix4x4 value;
 
