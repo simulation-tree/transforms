@@ -84,7 +84,8 @@ namespace Transforms
         {
             get
             {
-                return entity.GetComponent<LocalToWorld>().Rotation;
+                Quaternion rotation = entity.GetComponent<LocalToWorld>().Rotation;
+                return rotation;
             }
             set
             {

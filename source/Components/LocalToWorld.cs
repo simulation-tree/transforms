@@ -17,10 +17,7 @@ namespace Transforms.Components
         {
             get
             {
-                Vector3 scale;
-                scale.X = new Vector3(value.M11, value.M12, value.M13).Length();
-                scale.Y = new Vector3(value.M21, value.M22, value.M23).Length();
-                scale.Z = new Vector3(value.M31, value.M32, value.M33).Length();
+                Matrix4x4.Decompose(value, out Vector3 scale, out _, out _);
                 return scale;
             }
         }
