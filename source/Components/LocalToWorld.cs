@@ -22,10 +22,10 @@ namespace Transforms.Components
             }
         }
 
-#if NET5_0_OR_GREATER
+#if NET
         public LocalToWorld()
         {
-            value = Matrix4x4.Identity;
+            value = Default.value;
         }
 #endif
 

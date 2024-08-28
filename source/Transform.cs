@@ -1,14 +1,19 @@
 ﻿using Simulation;
-using System;
 using System.Numerics;
 using Transforms.Components;
 using Unmanaged;
 
 namespace Transforms
 {
-    public readonly struct Transform : ITransform, IDisposable
+    public readonly struct Transform : ITransform
     {
         private readonly Entity entity;
+
+        public readonly Entity Parent
+        {
+            get => entity.Parent;
+            set => entity.Parent = value;
+        }
 
         public readonly ref Vector3 LocalPosition
         {
@@ -75,7 +80,14 @@ namespace Transforms
             }
             set
             {
-                Matrix4x4.Invert(entity.GetComponent<LocalToWorld>().value, out Matrix4x4 wtl);
+                Matrix4x4 wtl = Matrix4x4.Identity;
+                eint parent = Parent;
+                if (parent != default)
+                {
+                    World world = entity;
+                    Matrix4x4.Invert(world.GetComponent(parent, LocalToWorld.Default).value, out wtl);
+                }
+
                 LocalPosition = Vector3.Transform(value, wtl);
             }
         }
@@ -84,12 +96,18 @@ namespace Transforms
         {
             get
             {
-                Quaternion rotation = entity.GetComponent<LocalToWorld>().Rotation;
-                return rotation;
+                return entity.GetComponent<WorldRotation>().value;
             }
             set
             {
-                Matrix4x4.Invert(entity.GetComponent<LocalToWorld>().value, out Matrix4x4 wtl);
+                Matrix4x4 wtl = Matrix4x4.Identity;
+                eint parent = Parent;
+                if (parent != default)
+                {
+                    World world = entity;
+                    Matrix4x4.Invert(world.GetComponent(parent, LocalToWorld.Default).value, out wtl);
+                }
+
                 LocalRotation = Quaternion.Normalize(Quaternion.CreateFromRotationMatrix(wtl) * value);
             }
         }
@@ -130,11 +148,6 @@ namespace Transforms
         public readonly override string ToString()
         {
             return entity.ToString();
-        }
-
-        public readonly void Dispose()
-        {
-            entity.Dispose();
         }
 
         Query IEntity.GetQuery(World world)
