@@ -72,6 +72,7 @@ namespace Transforms
         public readonly Vector3 LocalRight => Vector3.Transform(Vector3.UnitX, LocalRotation);
         public readonly Vector3 LocalUp => Vector3.Transform(Vector3.UnitY, LocalRotation);
         public readonly Vector3 LocalForward => Vector3.Transform(Vector3.UnitZ, LocalRotation);
+
         public readonly Vector3 WorldPosition
         {
             get
@@ -85,7 +86,7 @@ namespace Transforms
                 if (parent != default)
                 {
                     World world = entity;
-                    Matrix4x4.Invert(world.GetComponent(parent, LocalToWorld.Default).value, out wtl);
+                    Matrix4x4.Invert(world.GetComponent(parent, Components.LocalToWorld.Default).value, out wtl);
                 }
 
                 LocalPosition = Vector3.Transform(value, wtl);
@@ -105,7 +106,7 @@ namespace Transforms
                 if (parent != default)
                 {
                     World world = entity;
-                    Matrix4x4.Invert(world.GetComponent(parent, LocalToWorld.Default).value, out wtl);
+                    Matrix4x4.Invert(world.GetComponent(parent, Components.LocalToWorld.Default).value, out wtl);
                 }
 
                 LocalRotation = Quaternion.Normalize(Quaternion.CreateFromRotationMatrix(wtl) * value);
@@ -116,6 +117,7 @@ namespace Transforms
         public readonly Vector3 WorldRight => Vector3.Transform(Vector3.UnitX, WorldRotation);
         public readonly Vector3 WorldUp => Vector3.Transform(Vector3.UnitY, WorldRotation);
         public readonly Vector3 WorldForward => Vector3.Transform(Vector3.UnitZ, WorldRotation);
+        public readonly Matrix4x4 LocalToWorld => entity.GetComponent<LocalToWorld>().value;
 
         World IEntity.World => entity;
         uint IEntity.Value => entity;
@@ -132,10 +134,10 @@ namespace Transforms
             entity.AddComponent(Rotation.Default);
             entity.AddComponent(Scale.Default);
             entity.AddComponent(new IsTransform());
-            entity.AddComponent(new LocalToWorld(Position.Default.value, Rotation.Default.value, Scale.Default.value));
+            entity.AddComponent(Components.LocalToWorld.Default);
         }
 
-        public Transform(World world, Vector3 position, Vector3 scale, Quaternion rotation)
+        public Transform(World world, Vector3 position, Quaternion rotation, Vector3 scale)
         {
             entity = new(world);
             entity.AddComponent(new Position(position));

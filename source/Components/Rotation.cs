@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace Transforms.Components
 {
@@ -23,6 +24,27 @@ namespace Transforms.Components
         public Rotation(float x, float y, float z, float w)
         {
             value = new Quaternion(x, y, z, w);
+        }
+
+        public static Rotation FromDirection(Vector3 forwardDirection)
+        {
+            Vector3 identity = Vector3.UnitZ;
+            float dot = Vector3.Dot(identity, forwardDirection);
+            if (dot < -0.9999f)
+            {
+                return new Rotation(Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathF.PI));
+            }
+            else if (dot > 0.9999f)
+            {
+                return new Rotation(Quaternion.Identity);
+            }
+            else
+            {
+                float angle = (float)System.Math.Acos(dot);
+                Vector3 axis = Vector3.Cross(identity, forwardDirection);
+                axis = Vector3.Normalize(axis);
+                return new Rotation(Quaternion.CreateFromAxisAngle(axis, angle));
+            }
         }
     }
 }
