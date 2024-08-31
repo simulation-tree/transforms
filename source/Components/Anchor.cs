@@ -21,6 +21,21 @@ namespace Transforms.Components
         public value maxY;
         public value maxZ;
 
+#if NET
+        /// <summary>
+        /// Creates a default anchor pointing towards bottom left.
+        /// </summary>
+        public Anchor()
+        {
+            minX = new(0f, false);
+            minY = new(0f, false);
+            minZ = new(0f, false);
+            maxX = new(0f, false);
+            maxY = new(0f, false);
+            maxZ = new(0f, false);
+        }
+#endif
+
         public Anchor(value minX, value minY, value minZ, value maxX, value maxY, value maxZ)
         {
             this.minX = minX;

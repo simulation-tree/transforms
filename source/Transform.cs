@@ -77,7 +77,7 @@ namespace Transforms
         {
             get
             {
-                return entity.GetComponent<LocalToWorld>().Position;
+                return entity.GetComponentRef<LocalToWorld>().Position;
             }
             set
             {
@@ -97,7 +97,7 @@ namespace Transforms
         {
             get
             {
-                return entity.GetComponent<WorldRotation>().value;
+                return entity.GetComponentRef<WorldRotation>().value;
             }
             set
             {
@@ -113,11 +113,11 @@ namespace Transforms
             }
         }
 
-        public readonly Vector3 WorldScale => entity.GetComponent<LocalToWorld>().Scale;
+        public readonly Vector3 WorldScale => entity.GetComponentRef<LocalToWorld>().Scale;
         public readonly Vector3 WorldRight => Vector3.Transform(Vector3.UnitX, WorldRotation);
         public readonly Vector3 WorldUp => Vector3.Transform(Vector3.UnitY, WorldRotation);
         public readonly Vector3 WorldForward => Vector3.Transform(Vector3.UnitZ, WorldRotation);
-        public readonly Matrix4x4 LocalToWorld => entity.GetComponent<LocalToWorld>().value;
+        public readonly Matrix4x4 LocalToWorld => entity.GetComponentRef<LocalToWorld>().value;
 
         World IEntity.World => entity;
         uint IEntity.Value => entity;
