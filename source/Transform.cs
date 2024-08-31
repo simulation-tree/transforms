@@ -81,7 +81,7 @@ namespace Transforms
             set
             {
                 Matrix4x4 wtl = Matrix4x4.Identity;
-                eint parent = Parent;
+                uint parent = Parent;
                 if (parent != default)
                 {
                     World world = entity;
@@ -101,7 +101,7 @@ namespace Transforms
             set
             {
                 Matrix4x4 wtl = Matrix4x4.Identity;
-                eint parent = Parent;
+                uint parent = Parent;
                 if (parent != default)
                 {
                     World world = entity;
@@ -118,9 +118,9 @@ namespace Transforms
         public readonly Vector3 WorldForward => Vector3.Transform(Vector3.UnitZ, WorldRotation);
 
         World IEntity.World => entity;
-        eint IEntity.Value => entity;
+        uint IEntity.Value => entity;
 
-        public Transform(World world, eint existingEntity)
+        public Transform(World world, uint existingEntity)
         {
             entity = new(world, existingEntity);
         }
