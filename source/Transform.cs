@@ -7,7 +7,7 @@ namespace Transforms
 {
     public readonly struct Transform : ITransform
     {
-        private readonly Entity entity;
+        public readonly Entity entity;
 
         public readonly Entity Parent
         {
@@ -82,11 +82,10 @@ namespace Transforms
             set
             {
                 Matrix4x4 wtl = Matrix4x4.Identity;
-                uint parent = Parent;
+                Entity parent = entity.Parent;
                 if (parent != default)
                 {
-                    World world = entity;
-                    Matrix4x4.Invert(world.GetComponent(parent, Components.LocalToWorld.Default).value, out wtl);
+                    Matrix4x4.Invert(parent.GetComponent(Components.LocalToWorld.Default).value, out wtl);
                 }
 
                 LocalPosition = Vector3.Transform(value, wtl);
@@ -102,11 +101,10 @@ namespace Transforms
             set
             {
                 Matrix4x4 wtl = Matrix4x4.Identity;
-                uint parent = Parent;
+                Entity parent = entity.Parent;
                 if (parent != default)
                 {
-                    World world = entity;
-                    Matrix4x4.Invert(world.GetComponent(parent, Components.LocalToWorld.Default).value, out wtl);
+                    Matrix4x4.Invert(parent.GetComponent(Components.LocalToWorld.Default).value, out wtl);
                 }
 
                 LocalRotation = Quaternion.Normalize(Quaternion.CreateFromRotationMatrix(wtl) * value);
@@ -119,8 +117,9 @@ namespace Transforms
         public readonly Vector3 WorldForward => Vector3.Transform(Vector3.UnitZ, WorldRotation);
         public readonly Matrix4x4 LocalToWorld => entity.GetComponentRef<LocalToWorld>().value;
 
-        World IEntity.World => entity;
-        uint IEntity.Value => entity;
+        readonly uint IEntity.Value => entity.value;
+        readonly World IEntity.World => entity.world;
+        readonly Definition IEntity.Definition => new([RuntimeType.Get<IsTransform>(), RuntimeType.Get<LocalToWorld>()], []);
 
         public Transform(World world, uint existingEntity)
         {
@@ -150,16 +149,6 @@ namespace Transforms
         public readonly override string ToString()
         {
             return entity.ToString();
-        }
-
-        Query IEntity.GetQuery(World world)
-        {
-            return new Query(world, RuntimeType.Get<IsTransform>());
-        }
-
-        public static implicit operator Entity(Transform transform)
-        {
-            return transform.entity;
         }
     }
 }

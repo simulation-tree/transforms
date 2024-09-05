@@ -110,7 +110,7 @@ namespace Transforms.Tests
             using World world = new();
             Transform parentTransform = new(world, new(2f, 4f, -32f), Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathF.PI * 0.25f), new(2f, 2f, 2f));
             Transform transform = new(world);
-            transform.Parent = parentTransform;
+            transform.Parent = parentTransform.entity;
             transform.WorldPosition = new(1f, 2f, 3f);
             Vector3 localPosition = transform.LocalPosition;
             Matrix4x4 parentLtw = parentTransform.LocalToWorld;

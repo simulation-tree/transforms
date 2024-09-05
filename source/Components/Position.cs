@@ -1,6 +1,5 @@
-﻿#pragma warning disable CS8981
-using System;
-using System.Numerics;
+﻿using System.Numerics;
+using Unmanaged;
 
 namespace Transforms.Components
 {
@@ -25,23 +24,21 @@ namespace Transforms.Components
             value = new Vector3(x, y, z);
         }
 
-        public readonly override string ToString()
+        public unsafe readonly override string ToString()
         {
-            Span<char> buffer = stackalloc char[256];
-            int length = ToString(buffer);
-            return new string(buffer[..length]);
+            USpan<char> buffer = stackalloc char[256];
+            uint length = ToString(buffer);
+            return new string(buffer.pointer, 0, (int)length);
         }
 
-        public readonly int ToString(Span<char> buffer)
+        public readonly uint ToString(USpan<char> buffer)
         {
-            value.X.TryFormat(buffer, out int written);
-            buffer[written++] = ',';
-            buffer[written++] = ' ';
-            value.Y.TryFormat(buffer[written..], out int writtenY);
-            buffer[written + writtenY++] = ',';
-            buffer[written + writtenY++] = ' ';
-            value.Z.TryFormat(buffer[(written + writtenY)..], out int writtenZ);
-            return written + writtenY + writtenZ;
+            uint length = value.X.ToString(buffer);
+            buffer[length++] = ',';
+            length += value.Y.ToString(buffer.Slice(length));
+            buffer[length++] = ',';
+            length += value.Z.ToString(buffer.Slice(length));
+            return length;
         }
     }
 }
