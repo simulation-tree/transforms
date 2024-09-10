@@ -56,7 +56,7 @@ namespace Transforms.Components
 
             private int data;
 
-            public bool IsAbsolute
+            public bool IsRelative
             {
                 readonly get
                 {
@@ -86,7 +86,7 @@ namespace Transforms.Components
                 }
                 set
                 {
-                    bool absolute = IsAbsolute;
+                    bool absolute = IsRelative;
                     int valueInt = (int)(value * NumberRange) >> 1;
                     data = valueInt;
                     if (absolute)
@@ -100,11 +100,11 @@ namespace Transforms.Components
                 }
             }
 
-            public unsafe value(float number, bool absolute)
+            public unsafe value(float number, bool isRelative)
             {
                 ThrowIfOutOfRange(number);
                 data = (int)(number * NumberRange) >> 1;
-                if (absolute)
+                if (isRelative)
                 {
                     data &= ~1;
                 }
@@ -120,19 +120,6 @@ namespace Transforms.Components
                 if (input < -MaxNumberValue || input >= MaxNumberValue)
                 {
                     throw new ArgumentOutOfRangeException(nameof(input), $"Anchor value must be greater than {-MaxNumberValue} and below {MaxNumberValue}.");
-                }
-            }
-
-            public readonly float Evaluate(float context)
-            {
-                float n = Number;
-                if (IsAbsolute)
-                {
-                    return context + n;
-                }
-                else
-                {
-                    return context * n;
                 }
             }
         }

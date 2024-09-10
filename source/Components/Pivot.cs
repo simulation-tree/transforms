@@ -5,9 +5,9 @@ namespace Transforms.Components
 {
     public struct Pivot
     {
-        public static readonly Pivot Centered = new(0.5f, 0.5f, 0.5f);
-        public static readonly Pivot BottomLeft = new(0f, 0f, 0f);
-        public static readonly Pivot TopRight = new(1f, 1f, 0f);
+        public static readonly Vector3 Centered = new(0.5f, 0.5f, 0.5f);
+        public static readonly Vector3 BottomLeft = new(0f, 0f, 0f);
+        public static readonly Vector3 TopRight = new(1f, 1f, 0f);
 
         public Vector3 value;
 
