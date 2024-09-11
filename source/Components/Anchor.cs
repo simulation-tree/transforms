@@ -1,6 +1,7 @@
 ﻿#pragma warning disable CS8981
 using System;
 using System.Diagnostics;
+using Unmanaged;
 
 namespace Transforms.Components
 {
@@ -112,6 +113,60 @@ namespace Transforms.Components
                 {
                     data |= 1;
                 }
+            }
+
+            public unsafe override string ToString()
+            {
+                USpan<char> buffer = stackalloc char[32];
+                uint length = ToString(buffer);
+                return new string(buffer.pointer, 0, (int)length);
+            }
+
+            public readonly uint ToString(USpan<char> buffer)
+            {
+                bool isRelative = IsRelative;
+                float number = Number;
+                uint length = 0;
+                if (isRelative)
+                {
+                    buffer[0] = 'r';
+                    buffer[1] = ':';
+                    length = 2;
+                }
+                else
+                {
+                    buffer[0] = 'a';
+                    buffer[1] = ':';
+                    length = 2;
+                }
+
+                length += number.ToString(buffer.Slice(length));
+                return length;
+            }
+
+            public readonly override bool Equals(object? obj)
+            {
+                return obj is value value && Equals(value);
+            }
+
+            public readonly bool Equals(value other)
+            {
+                return data == other.data;
+            }
+
+            public readonly override int GetHashCode()
+            {
+                return data.GetHashCode();
+            }
+
+            public static bool operator ==(value left, value right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(value left, value right)
+            {
+                return !(left == right);
             }
 
             [Conditional("DEBUG")]
