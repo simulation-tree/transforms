@@ -1,7 +1,6 @@
 ﻿using Simulation;
 using System.Numerics;
 using Transforms.Components;
-using Unmanaged;
 
 namespace Transforms
 {
@@ -19,17 +18,13 @@ namespace Transforms
         {
             get
             {
-                ref Position component = ref entity.TryGetComponentRef<Position>(out bool contains);
-                if (contains)
+                if (!entity.ContainsComponent<Position>())
                 {
-                    return ref component.value;
+                    entity.AddComponent(Position.Default);
                 }
-                else
-                {
-                    component = ref entity.AddComponentRef<Position>();
-                    component.value = Position.Default.value;
-                    return ref component.value;
-                }
+
+                ref Position component = ref entity.GetComponentRef<Position>();
+                return ref component.value;
             }
         }
 
@@ -37,17 +32,13 @@ namespace Transforms
         {
             get
             {
-                ref Rotation component = ref entity.TryGetComponentRef<Rotation>(out bool contains);
-                if (contains)
+                if (!entity.ContainsComponent<Rotation>())
                 {
-                    return ref component.value;
+                    entity.AddComponent(Rotation.Default);
                 }
-                else
-                {
-                    component = ref entity.AddComponentRef<Rotation>();
-                    component.value = Rotation.Default.value;
-                    return ref component.value;
-                }
+
+                ref Rotation component = ref entity.GetComponentRef<Rotation>();
+                return ref component.value;
             }
         }
 
@@ -55,17 +46,13 @@ namespace Transforms
         {
             get
             {
-                ref Scale component = ref entity.TryGetComponentRef<Scale>(out bool contains);
-                if (contains)
+                if (!entity.ContainsComponent<Scale>())
                 {
-                    return ref component.value;
+                    entity.AddComponent(Scale.Default);
                 }
-                else
-                {
-                    component = ref entity.AddComponentRef<Scale>();
-                    component.value = Scale.Default.value;
-                    return ref component.value;
-                }
+
+                ref Scale component = ref entity.GetComponentRef<Scale>();
+                return ref component.value;
             }
         }
 
@@ -119,7 +106,7 @@ namespace Transforms
 
         readonly uint IEntity.Value => entity.value;
         readonly World IEntity.World => entity.world;
-        readonly Definition IEntity.Definition => new([RuntimeType.Get<IsTransform>(), RuntimeType.Get<LocalToWorld>()], []);
+        readonly Definition IEntity.Definition => new Definition().AddComponentType<IsTransform>();
 
         public Transform(World world, uint existingEntity)
         {

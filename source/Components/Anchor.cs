@@ -170,7 +170,7 @@ namespace Transforms.Components
             }
 
             [Conditional("DEBUG")]
-            private readonly void ThrowIfOutOfRange(float input)
+            private static void ThrowIfOutOfRange(float input)
             {
                 if (input < -MaxNumberValue || input >= MaxNumberValue)
                 {
