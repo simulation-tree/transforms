@@ -16,6 +16,10 @@ namespace Transforms.Components
         public static readonly Anchor TopRight = new(new(1f, false), new(1f, false), new(0f, false), new(1f, false), new(1f, false), new(0f, false));
         public static readonly Anchor BottomRight = new(new(1f, false), new(0f, false), new(0f, false), new(1f, false), new(0f, false), new(0f, false));
         public static readonly Anchor TopLeft = new(new(0f, false), new(1f, false), new(0f, false), new(0f, false), new(1f, false), new(0f, false));
+        public static readonly Anchor Bottom = new(new(0.5f, false), new(0f, false), new(0f, false), new(0.5f, false), new(0f, false), new(0f, false));
+        public static readonly Anchor Top = new(new(0.5f, false), new(1f, false), new(0f, false), new(0.5f, false), new(1f, false), new(0f, false));
+        public static readonly Anchor Left = new(new(0f, false), new(0.5f, false), new(0f, false), new(0f, false), new(0.5f, false), new(0f, false));
+        public static readonly Anchor Right = new(new(1f, false), new(0.5f, false), new(0f, false), new(1f, false), new(0.5f, false), new(0f, false));
 
         public value minX;
         public value minY;

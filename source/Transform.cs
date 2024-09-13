@@ -137,5 +137,10 @@ namespace Transforms
         {
             return entity.ToString();
         }
+
+        public static implicit operator Entity(Transform transform)
+        {
+            return transform.entity;
+        }
     }
 }
