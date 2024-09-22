@@ -61,7 +61,7 @@ namespace Transforms.Components
 
             private int data;
 
-            public bool IsRelative
+            public bool FromEdge
             {
                 readonly get
                 {
@@ -91,7 +91,7 @@ namespace Transforms.Components
                 }
                 set
                 {
-                    bool absolute = IsRelative;
+                    bool absolute = FromEdge;
                     int valueInt = (int)(value * NumberRange) >> 1;
                     data = valueInt;
                     if (absolute)
@@ -105,11 +105,11 @@ namespace Transforms.Components
                 }
             }
 
-            public unsafe value(float number, bool isRelative)
+            public unsafe value(float number, bool fromEdge)
             {
                 ThrowIfOutOfRange(number);
                 data = (int)(number * NumberRange) >> 1;
-                if (isRelative)
+                if (fromEdge)
                 {
                     data &= ~1;
                 }
@@ -128,7 +128,7 @@ namespace Transforms.Components
 
             public readonly uint ToString(USpan<char> buffer)
             {
-                bool isRelative = IsRelative;
+                bool isRelative = FromEdge;
                 float number = Number;
                 uint length = 0;
                 if (isRelative)
