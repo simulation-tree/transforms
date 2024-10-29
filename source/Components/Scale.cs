@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Unmanaged;
 
 namespace Transforms.Components
 {
@@ -8,7 +9,7 @@ namespace Transforms.Components
 
         public Vector3 value;
 
-#if NET5_0_OR_GREATER
+#if NET
         public Scale()
         {
             value = Vector3.One;
@@ -25,9 +26,26 @@ namespace Transforms.Components
             this.value = value;
         }
 
-        public Scale(float x, float y, float z = 1f)
+        public Scale(float x, float y)
+        {
+            value = new Vector3(x, y, Default.value.Z);
+        }
+
+        public Scale(float x, float y, float z)
         {
             value = new Vector3(x, y, z);
+        }
+
+        public unsafe readonly override string ToString()
+        {
+            USpan<char> buffer = stackalloc char[32];
+            uint length = ToString(buffer);
+            return buffer.Slice(0, length).ToString();
+        }
+
+        public readonly uint ToString(USpan<char> buffer)
+        {
+            return value.ToString(buffer);
         }
     }
 }

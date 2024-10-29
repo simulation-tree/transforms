@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using Unmanaged;
 
 namespace Transforms.Components
 {
@@ -9,7 +10,7 @@ namespace Transforms.Components
 
         public Quaternion value;
 
-#if NET5_0_OR_GREATER
+#if NET
         public Rotation()
         {
             value = Quaternion.Identity;
@@ -24,6 +25,18 @@ namespace Transforms.Components
         public Rotation(float x, float y, float z, float w)
         {
             value = new Quaternion(x, y, z, w);
+        }
+
+        public readonly override string ToString()
+        {
+            USpan<char> buffer = stackalloc char[32];
+            uint length = ToString(buffer);
+            return buffer.Slice(0, length).ToString();
+        }
+
+        public readonly uint ToString(USpan<char> buffer)
+        {
+            return value.ToString(buffer);
         }
 
         public static Rotation FromDirection(Vector3 forwardDirection)

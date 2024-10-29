@@ -1,6 +1,7 @@
 ﻿using Simulation;
 using System.Numerics;
 using Transforms.Components;
+using Unmanaged;
 
 namespace Transforms
 {
@@ -76,6 +77,8 @@ namespace Transforms
                 }
 
                 LocalPosition = Vector3.Transform(value, wtl);
+                //todo: fault: local to world isnt being updated, this should be ok because the design is that
+                //ltw updates after an iteration, so perhaps these setters for world should be gone
             }
         }
 
@@ -87,8 +90,8 @@ namespace Transforms
             }
             set
             {
-                Matrix4x4 wtl = Matrix4x4.Identity;
                 Entity parent = entity.Parent;
+                Matrix4x4 wtl = Matrix4x4.Identity;
                 if (parent != default)
                 {
                     Matrix4x4.Invert(parent.GetComponent(Components.LocalToWorld.Default).value, out wtl);
@@ -121,6 +124,7 @@ namespace Transforms
             entity.AddComponent(Scale.Default);
             entity.AddComponent(new IsTransform());
             entity.AddComponent(Components.LocalToWorld.Default);
+            entity.AddComponent(Components.WorldRotation.Default);
         }
 
         public Transform(World world, Vector3 position, Quaternion rotation, Vector3 scale)
@@ -131,11 +135,24 @@ namespace Transforms
             entity.AddComponent(new Scale(scale));
             entity.AddComponent(new IsTransform());
             entity.AddComponent(new LocalToWorld(position, rotation, scale));
+            entity.AddComponent(new WorldRotation(rotation));
+        }
+
+        public readonly void Dispose()
+        {
+            entity.Dispose();
         }
 
         public readonly override string ToString()
         {
-            return entity.ToString();
+            USpan<char> buffer = stackalloc char[64];
+            uint length = ToString(buffer);
+            return buffer.Slice(0, length).ToString();
+        }
+
+        public readonly uint ToString(USpan<char> buffer)
+        {
+            return entity.ToString(buffer);
         }
 
         public static implicit operator Entity(Transform transform)

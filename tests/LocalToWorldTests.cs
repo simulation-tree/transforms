@@ -119,5 +119,25 @@ namespace Transforms.Tests
             Assert.That(worldPosition.Y, Is.EqualTo(2f).Within(0.001f));
             Assert.That(worldPosition.Z, Is.EqualTo(3f).Within(0.001f));
         }
+
+        [Test]
+        public void ReadDirectionAfterMoving()
+        {
+            LocalToWorld ltw = new(Vector3.Zero, Quaternion.Identity, Vector3.One);
+            Assert.That(ltw.Position.X, Is.EqualTo(0f).Within(0.1f));
+            Assert.That(ltw.Position.Y, Is.EqualTo(0f).Within(0.1f));
+            Assert.That(ltw.Position.Z, Is.EqualTo(0f).Within(0.1f));
+            Assert.That(ltw.Forward.X, Is.EqualTo(0f).Within(0.1f));
+            Assert.That(ltw.Forward.Y, Is.EqualTo(0f).Within(0.1f));
+            Assert.That(ltw.Forward.Z, Is.EqualTo(1f).Within(0.1f));
+
+            ltw = new(new(1, 2, 3), Quaternion.Identity, Vector3.One);
+            Assert.That(ltw.Position.X, Is.EqualTo(1f).Within(0.1f));
+            Assert.That(ltw.Position.Y, Is.EqualTo(2f).Within(0.1f));
+            Assert.That(ltw.Position.Z, Is.EqualTo(3f).Within(0.1f));
+            Assert.That(ltw.Forward.X, Is.EqualTo(0f).Within(0.1f));
+            Assert.That(ltw.Forward.Y, Is.EqualTo(0f).Within(0.1f));
+            Assert.That(ltw.Forward.Z, Is.EqualTo(1f).Within(0.1f));
+        }
     }
 }

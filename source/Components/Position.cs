@@ -19,26 +19,26 @@ namespace Transforms.Components
             this.value = value;
         }
 
-        public Position(float x, float y, float z = 0f)
+        public Position(float x, float y)
+        {
+            value = new Vector3(x, y, Default.value.Z);
+        }
+
+        public Position(float x, float y, float z)
         {
             value = new Vector3(x, y, z);
         }
 
         public unsafe readonly override string ToString()
         {
-            USpan<char> buffer = stackalloc char[256];
+            USpan<char> buffer = stackalloc char[32];
             uint length = ToString(buffer);
             return buffer.Slice(0, length).ToString();
         }
 
         public readonly uint ToString(USpan<char> buffer)
         {
-            uint length = value.X.ToString(buffer);
-            buffer[length++] = ',';
-            length += value.Y.ToString(buffer.Slice(length));
-            buffer[length++] = ',';
-            length += value.Z.ToString(buffer.Slice(length));
-            return length;
+            return value.ToString(buffer);
         }
     }
 }
