@@ -21,18 +21,15 @@ namespace Transforms.Components
 
         public readonly Quaternion AsQuaternion()
         {
-            float cy = (float)Math.Cos(value.Z * 0.5);
-            float sy = (float)Math.Sin(value.Z * 0.5);
-            float cp = (float)Math.Cos(value.Y * 0.5);
-            float sp = (float)Math.Sin(value.Y * 0.5);
-            float cr = (float)Math.Cos(value.X * 0.5);
-            float sr = (float)Math.Sin(value.X * 0.5);
+            (float s, float c) z = MathF.SinCos(value.Z);
+            (float s, float c) y = MathF.SinCos(value.Y);
+            (float s, float c) x = MathF.SinCos(value.X);
             return new Quaternion
             {
-                W = cr * cp * cy + sr * sp * sy,
-                X = sr * cp * cy - cr * sp * sy,
-                Y = cr * sp * cy + sr * cp * sy,
-                Z = cr * cp * sy - sr * sp * cy
+                W = x.c * y.c * z.c + x.s * y.s * z.s,
+                X = x.s * y.c * z.c - x.c * y.s * z.s,
+                Y = x.c * y.s * z.c + x.s * y.c * z.s,
+                Z = x.c * y.c * z.s - x.s * y.s * z.c
             };
         }
 
