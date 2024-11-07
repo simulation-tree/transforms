@@ -21,9 +21,10 @@ namespace Transforms.Components
 
         public readonly Quaternion AsQuaternion()
         {
-            (float s, float c) z = MathF.SinCos(value.Z);
-            (float s, float c) y = MathF.SinCos(value.Y);
+            Vector3 value = this.value * 0.5f;
             (float s, float c) x = MathF.SinCos(value.X);
+            (float s, float c) y = MathF.SinCos(value.Y);
+            (float s, float c) z = MathF.SinCos(value.Z);
             return new Quaternion
             {
                 W = x.c * y.c * z.c + x.s * y.s * z.s,
