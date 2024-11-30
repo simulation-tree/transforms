@@ -1,19 +1,13 @@
-﻿using Simulation;
-using System.Numerics;
+﻿using System.Numerics;
 using Transforms.Components;
 using Unmanaged;
+using Worlds;
 
 namespace Transforms
 {
     public readonly struct Transform : ITransform
     {
-        public readonly Entity entity;
-
-        public readonly Entity Parent
-        {
-            get => entity.Parent;
-            set => entity.Parent = value;
-        }
+        private readonly Entity entity;
 
         public readonly ref Vector3 LocalPosition
         {

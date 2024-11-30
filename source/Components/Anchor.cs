@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using Unmanaged;
+using Worlds;
 
 namespace Transforms.Components
 {
@@ -9,6 +10,7 @@ namespace Transforms.Components
     /// Overrides transformation logic for positioning elements relative
     /// or absolute to the parent element.
     /// </summary>
+    [Component]
     public struct Anchor
     {
         public static readonly Anchor Centered = new(new(0.5f, false), new(0.5f, false), new(0f, false), new(0.5f, false), new(0.5f, false), new(0f, false));

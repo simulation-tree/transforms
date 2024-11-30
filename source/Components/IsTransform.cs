@@ -1,5 +1,8 @@
-﻿namespace Transforms.Components
+﻿using Worlds;
+
+namespace Transforms.Components
 {
+    [Component]
     public struct IsTransform
     {
 

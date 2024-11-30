@@ -1,7 +1,9 @@
 ﻿using System.Numerics;
+using Worlds;
 
 namespace Transforms.Components
 {
+    [Component]
     public struct Pivot
     {
         public static readonly Vector3 Centered = new(0.5f, 0.5f, 0.5f);
