@@ -11,7 +11,7 @@ namespace Transforms.Components
     /// or absolute to the parent element.
     /// </summary>
     [Component]
-    public struct Anchor
+    public struct Anchor : IEquatable<Anchor>
     {
         public static readonly Anchor Centered = new(new(0.5f, false), new(0.5f, false), new(0f, false), new(0.5f, false), new(0.5f, false), new(0f, false));
         public static readonly Anchor BottomLeft = new(new(0f, false), new(0f, false), new(0f, false), new(0f, false), new(0f, false), new(0f, false));
@@ -55,7 +55,32 @@ namespace Transforms.Components
             this.maxZ = maxZ;
         }
 
-        public struct value
+        public readonly override bool Equals(object? obj)
+        {
+            return obj is Anchor anchor && Equals(anchor);
+        }
+
+        public readonly bool Equals(Anchor other)
+        {
+            return minX.Equals(other.minX) && minY.Equals(other.minY) && minZ.Equals(other.minZ) && maxX.Equals(other.maxX) && maxY.Equals(other.maxY) && maxZ.Equals(other.maxZ);
+        }
+
+        public readonly override int GetHashCode()
+        {
+            return HashCode.Combine(minX, minY, minZ, maxX, maxY, maxZ);
+        }
+
+        public static bool operator ==(Anchor left, Anchor right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Anchor left, Anchor right)
+        {
+            return !(left == right);
+        }
+
+        public struct value : IEquatable<value>
         {
             public const int NumberRange = 65536;
             public const int MaxNumberValue = 32768;

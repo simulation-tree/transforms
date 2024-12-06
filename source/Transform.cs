@@ -18,7 +18,7 @@ namespace Transforms
                     entity.AddComponent(Position.Default);
                 }
 
-                ref Position component = ref entity.GetComponentRef<Position>();
+                ref Position component = ref entity.GetComponent<Position>();
                 return ref component.value;
             }
         }
@@ -32,7 +32,7 @@ namespace Transforms
                     entity.AddComponent(Rotation.Default);
                 }
 
-                ref Rotation component = ref entity.GetComponentRef<Rotation>();
+                ref Rotation component = ref entity.GetComponent<Rotation>();
                 return ref component.value;
             }
         }
@@ -46,7 +46,7 @@ namespace Transforms
                     entity.AddComponent(Scale.Default);
                 }
 
-                ref Scale component = ref entity.GetComponentRef<Scale>();
+                ref Scale component = ref entity.GetComponent<Scale>();
                 return ref component.value;
             }
         }
@@ -59,7 +59,7 @@ namespace Transforms
         {
             get
             {
-                return entity.GetComponentRef<LocalToWorld>().Position;
+                return entity.GetComponent<LocalToWorld>().Position;
             }
             set
             {
@@ -80,7 +80,7 @@ namespace Transforms
         {
             get
             {
-                return entity.GetComponentRef<WorldRotation>().value;
+                return entity.GetComponent<WorldRotation>().value;
             }
             set
             {
@@ -95,11 +95,11 @@ namespace Transforms
             }
         }
 
-        public readonly Vector3 WorldScale => entity.GetComponentRef<LocalToWorld>().Scale;
+        public readonly Vector3 WorldScale => entity.GetComponent<LocalToWorld>().Scale;
         public readonly Vector3 WorldRight => Vector3.Transform(Vector3.UnitX, WorldRotation);
         public readonly Vector3 WorldUp => Vector3.Transform(Vector3.UnitY, WorldRotation);
         public readonly Vector3 WorldForward => Vector3.Transform(Vector3.UnitZ, WorldRotation);
-        public readonly Matrix4x4 LocalToWorld => entity.GetComponentRef<LocalToWorld>().value;
+        public readonly Matrix4x4 LocalToWorld => entity.GetComponent<LocalToWorld>().value;
 
         readonly uint IEntity.Value => entity.value;
         readonly World IEntity.World => entity.world;
