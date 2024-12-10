@@ -10,7 +10,12 @@ namespace Transforms.Components
 
         public Matrix4x4 value;
 
-        public readonly Vector3 Position => value.Translation;
+        public Vector3 Position
+        {
+            readonly get => value.Translation;
+            set => this.value.Translation = value;
+        }
+
         public readonly Vector3 Right => Vector3.Normalize(new(value.M11, value.M12, value.M13));
         public readonly Vector3 Up => Vector3.Normalize(new(value.M21, value.M22, value.M23));
         public readonly Vector3 Forward => Vector3.Normalize(new(value.M31, value.M32, value.M33));
