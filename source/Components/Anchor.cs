@@ -88,7 +88,7 @@ namespace Transforms.Components
 
             private int data;
 
-            public bool FromEdge
+            public bool Absolute
             {
                 readonly get
                 {
@@ -118,7 +118,7 @@ namespace Transforms.Components
                 }
                 set
                 {
-                    bool absolute = FromEdge;
+                    bool absolute = Absolute;
                     int valueInt = (int)(value * NumberRange) >> 1;
                     data = valueInt;
                     if (absolute)
@@ -132,9 +132,10 @@ namespace Transforms.Components
                 }
             }
 
-            public unsafe value(float number, bool fromEdge)
+            public value(float number, bool fromEdge)
             {
                 ThrowIfOutOfRange(number);
+
                 data = (int)(number * NumberRange) >> 1;
                 if (fromEdge)
                 {
@@ -146,7 +147,72 @@ namespace Transforms.Components
                 }
             }
 
-            public unsafe override string ToString()
+            public value(USpan<char> text)
+            {
+                bool negative = false;
+                uint index = 0;
+                uint startIndex = 0;
+                bool foundNumber = false;
+                bool absolute = true;
+                uint endIndex = 0;
+                while (index < text.Length)
+                {
+                    char c = text[index];
+                    if (c == '-')
+                    {
+                        negative = true;
+                    }
+                    else if (c == '.' || char.IsDigit(c))
+                    {
+                        if (!foundNumber)
+                        {
+                            startIndex = index;
+                        }
+
+                        foundNumber = true;
+                        if (index == text.Length - 1)
+                        {
+                            endIndex = index + 1;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        endIndex = index;
+
+                        if (c == '%')
+                        {
+                            absolute = false;
+                            break;
+                        }
+                    }
+
+                    index++;
+                }
+
+                if (!foundNumber)
+                {
+                    throw new FormatException($"No number found in text input `{text.ToString()}`");
+                }
+
+                float number = float.Parse(text.Slice(startIndex, endIndex - startIndex).AsSystemSpan());
+                if (negative)
+                {
+                    number = -number;
+                }
+
+                Absolute = absolute;
+                if (absolute)
+                {
+                    Number = number;
+                }
+                else
+                {
+                    Number = number / 100f;
+                }
+            }
+
+            public readonly override string ToString()
             {
                 USpan<char> buffer = stackalloc char[32];
                 uint length = ToString(buffer);
@@ -155,7 +221,7 @@ namespace Transforms.Components
 
             public readonly uint ToString(USpan<char> buffer)
             {
-                bool isRelative = FromEdge;
+                bool isRelative = Absolute;
                 float number = Number;
                 uint length = 0;
                 if (isRelative)
@@ -198,6 +264,21 @@ namespace Transforms.Components
             public static bool operator !=(value left, value right)
             {
                 return !(left == right);
+            }
+
+            public static implicit operator float(value value)
+            {
+                return value.Number;
+            }
+
+            public static implicit operator value(USpan<char> text)
+            {
+                return new(text);
+            }
+
+            public static implicit operator value(string text)
+            {
+                return new(text.AsUSpan());
             }
 
             [Conditional("DEBUG")]
