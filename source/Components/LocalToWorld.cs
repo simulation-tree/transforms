@@ -1,10 +1,11 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using Worlds;
 
 namespace Transforms.Components
 {
     [Component]
-    public struct LocalToWorld
+    public struct LocalToWorld : IEquatable<LocalToWorld>
     {
         public static readonly LocalToWorld Default = new(Components.Position.Default.value, Components.Rotation.Default.value, Components.Scale.Default.value);
 
@@ -62,6 +63,31 @@ namespace Transforms.Components
         public LocalToWorld(Vector3 position, Quaternion rotation, Vector3 scale)
         {
             value = Matrix4x4.CreateScale(scale) * Matrix4x4.CreateFromQuaternion(rotation) * Matrix4x4.CreateTranslation(position);
+        }
+
+        public readonly override bool Equals(object? obj)
+        {
+            return obj is LocalToWorld world && Equals(world);
+        }
+
+        public readonly bool Equals(LocalToWorld other)
+        {
+            return value.Equals(other.value);
+        }
+
+        public readonly override int GetHashCode()
+        {
+            return HashCode.Combine(value);
+        }
+
+        public static bool operator ==(LocalToWorld left, LocalToWorld right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(LocalToWorld left, LocalToWorld right)
+        {
+            return !(left == right);
         }
     }
 }
