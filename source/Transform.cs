@@ -103,7 +103,7 @@ namespace Transforms
 
         readonly uint IEntity.Value => entity.value;
         readonly World IEntity.World => entity.world;
-        readonly Definition IEntity.Definition => new Definition().AddComponentTypes<IsTransform, LocalToWorld>();
+        readonly Definition IEntity.Definition => new Definition().AddComponentTypes<IsTransform, LocalToWorld, Position, Rotation, Scale>();
 
         public Transform(World world, uint existingEntity)
         {
