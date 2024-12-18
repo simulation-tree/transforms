@@ -64,7 +64,7 @@ namespace Transforms
             set
             {
                 Matrix4x4 wtl = Matrix4x4.Identity;
-                Entity parent = entity.Parent;
+                Entity parent = entity.GetParent();
                 if (parent != default)
                 {
                     Matrix4x4.Invert(parent.GetComponent(Components.LocalToWorld.Default).value, out wtl);
@@ -84,7 +84,7 @@ namespace Transforms
             }
             set
             {
-                Entity parent = entity.Parent;
+                Entity parent = entity.GetParent();
                 Matrix4x4 wtl = Matrix4x4.Identity;
                 if (parent != default)
                 {
@@ -103,7 +103,7 @@ namespace Transforms
 
         readonly uint IEntity.Value => entity.value;
         readonly World IEntity.World => entity.world;
-        readonly Definition IEntity.Definition => new Definition().AddComponentTypes<IsTransform, LocalToWorld, Position, Rotation, Scale>();
+        readonly Definition IEntity.Definition => new Definition().AddComponentTypes<IsTransform, LocalToWorld, Position>();
 
         public Transform(World world, uint existingEntity)
         {
@@ -112,24 +112,12 @@ namespace Transforms
 
         public Transform(World world)
         {
-            entity = new(world);
-            entity.AddComponent(Position.Default);
-            entity.AddComponent(Rotation.Default);
-            entity.AddComponent(Scale.Default);
-            entity.AddComponent(new IsTransform());
-            entity.AddComponent(Components.LocalToWorld.Default);
-            entity.AddComponent(Components.WorldRotation.Default);
+            entity = new Entity<IsTransform, Position, Rotation, Scale, LocalToWorld, WorldRotation>(world, default, Position.Default, Rotation.Default, Scale.Default, Components.LocalToWorld.Default, Components.WorldRotation.Default).AsEntity().As<Transform>();
         }
 
         public Transform(World world, Vector3 position, Quaternion rotation, Vector3 scale)
         {
-            entity = new(world);
-            entity.AddComponent(new Position(position));
-            entity.AddComponent(new Rotation(rotation));
-            entity.AddComponent(new Scale(scale));
-            entity.AddComponent(new IsTransform());
-            entity.AddComponent(new LocalToWorld(position, rotation, scale));
-            entity.AddComponent(new WorldRotation(rotation));
+            entity = new Entity<IsTransform, Position, Rotation, Scale, LocalToWorld, WorldRotation>(world, default, new Position(position), new Rotation(rotation), new Scale(scale), new LocalToWorld(position, rotation, scale), new WorldRotation(rotation)).AsEntity().As<Transform>();
         }
 
         public readonly void Dispose()
