@@ -21,6 +21,30 @@ namespace Transforms.Components
             value = new Vector3(x, y, z);
         }
 
+        public EulerAngles(Quaternion rotation)
+        {
+            Quaternion normalized = Quaternion.Normalize(rotation);
+            float sinPitch = 2f * (normalized.Y * normalized.Z + normalized.W * normalized.X);
+            float cosPitch = 1f - 2f * (normalized.X * normalized.X + normalized.Y * normalized.Y);
+            float pitch = MathF.Atan2(sinPitch, cosPitch);
+
+            float sinYaw = 2f * (normalized.W * normalized.Y - normalized.X * normalized.Z);
+            float yaw;
+            if (MathF.Abs(sinYaw) >= 1f)
+            {
+                yaw = MathF.CopySign(MathF.PI * 0.5f, sinYaw);
+            }
+            else
+            {
+                yaw = MathF.Asin(sinYaw);
+            }
+
+            float sinRoll = 2f * (normalized.X * normalized.Y + normalized.W * normalized.Z);
+            float cosRoll = 1f - 2f * (normalized.Y * normalized.Y + normalized.Z * normalized.Z);
+            float roll = MathF.Atan2(sinRoll, cosRoll);
+            value = new Vector3(pitch, yaw, roll);
+        }
+
         public readonly Quaternion AsQuaternion()
         {
             Vector3 value = this.value * 0.5f;
