@@ -5,7 +5,7 @@ using Worlds;
 
 namespace Transforms.Tests
 {
-    public class LocalToWorldTests
+    public class LocalToWorldTests : TransformTests
     {
         [Test]
         public void BuildAndDecomposeMatrix()
@@ -107,16 +107,6 @@ namespace Transforms.Tests
         [Test]
         public void SetWorldPositionWithInverseLTW()
         {
-            ComponentType.Register<IsTransform>();
-            ComponentType.Register<Position>();
-            ComponentType.Register<Rotation>();
-            ComponentType.Register<WorldRotation>();
-            ComponentType.Register<Scale>();
-            ComponentType.Register<Anchor>();
-            ComponentType.Register<Pivot>();
-            ComponentType.Register<LocalToWorld>();
-
-            using World world = new();
             Transform parentTransform = new(world, new(2f, 4f, -32f), Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathF.PI * 0.25f), new(2f, 2f, 2f));
             Transform transform = new(world);
             transform.SetParent(parentTransform);
@@ -147,6 +137,37 @@ namespace Transforms.Tests
             Assert.That(ltw.Forward.X, Is.EqualTo(0f).Within(0.1f));
             Assert.That(ltw.Forward.Y, Is.EqualTo(0f).Within(0.1f));
             Assert.That(ltw.Forward.Z, Is.EqualTo(1f).Within(0.1f));
+        }
+
+        [Test]
+        public void LocalPositionFromWorld()
+        {
+            LocalToWorld child = new(new Vector3(1, 2, 3), Quaternion.Identity, new Vector3(1, 1, 1));
+            LocalToWorld parent = new(new Vector3(5, 0, 0), Quaternion.Identity, new Vector3(2, 3, 2));
+            Vector3 localPosition = child.Position;
+            Vector3 worldPosition = Vector3.Transform(localPosition, parent.value);
+            Assert.That(worldPosition.X, Is.EqualTo(7).Within(0.1f));
+            Assert.That(worldPosition.Y, Is.EqualTo(6).Within(0.1f));
+            Assert.That(worldPosition.Z, Is.EqualTo(6).Within(0.1f));
+
+            Vector3 desiredWorldPosition = new(1, -2, -2);
+            Matrix4x4.Invert(parent.value, out Matrix4x4 invParent);
+            Vector3 desiredLocalPosition = Vector3.Transform(desiredWorldPosition, invParent);
+            Assert.That(desiredLocalPosition.X, Is.EqualTo(-2f).Within(0.1f));
+            Assert.That(desiredLocalPosition.Y, Is.EqualTo(-0.6666f).Within(0.1f));
+            Assert.That(desiredLocalPosition.Z, Is.EqualTo(-1f).Within(0.1f));
+        }
+
+        [Test]
+        public void ConvertEulerToRotation()
+        {
+            EulerAngles euler = EulerAngles.CreateFromDegrees(0f, 90f, 0f);
+            Quaternion a = Quaternion.CreateFromYawPitchRoll(euler.value.Y, euler.value.X, euler.value.Z);
+            Quaternion b = euler.AsQuaternion();
+            Assert.That(a.X, Is.EqualTo(b.X).Within(0.001f));
+            Assert.That(a.Y, Is.EqualTo(b.Y).Within(0.001f));
+            Assert.That(a.Z, Is.EqualTo(b.Z).Within(0.001f));
+            Assert.That(a.W, Is.EqualTo(b.W).Within(0.001f));
         }
     }
 }

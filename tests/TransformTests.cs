@@ -1,0 +1,50 @@
+﻿using Simulation;
+using Simulation.Components;
+using Transforms.Components;
+using Unmanaged.Tests;
+using Worlds;
+
+namespace Transforms.Tests
+{
+    public abstract class TransformTests : UnmanagedTests
+    {
+        protected World world;
+        protected Simulator simulator;
+
+        static TransformTests()
+        {
+            TypeLayout.Register<IsProgram>("IsProgram");
+            TypeLayout.Register<IsTransform>("IsTransform");
+            TypeLayout.Register<Position>("Position");
+            TypeLayout.Register<Rotation>("Rotation");
+            TypeLayout.Register<WorldRotation>("WorldRotation");
+            TypeLayout.Register<Scale>("Scale");
+            TypeLayout.Register<Anchor>("Anchor");
+            TypeLayout.Register<Pivot>("Pivot");
+            TypeLayout.Register<LocalToWorld>("LocalToWorld");
+        }
+
+        protected override void SetUp()
+        {
+            base.SetUp();
+            world = new();
+            world.Schema.RegisterComponent<IsProgram>();
+            world.Schema.RegisterComponent<IsTransform>();
+            world.Schema.RegisterComponent<Position>();
+            world.Schema.RegisterComponent<Rotation>();
+            world.Schema.RegisterComponent<WorldRotation>();
+            world.Schema.RegisterComponent<Scale>();
+            world.Schema.RegisterComponent<Anchor>();
+            world.Schema.RegisterComponent<Pivot>();
+            world.Schema.RegisterComponent<LocalToWorld>();
+            simulator = new(world);
+        }
+
+        protected override void TearDown()
+        {
+            simulator.Dispose();
+            world.Dispose();
+            base.TearDown();
+        }
+    }
+}
