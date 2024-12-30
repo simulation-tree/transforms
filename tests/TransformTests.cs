@@ -13,15 +13,15 @@ namespace Transforms.Tests
 
         static TransformTests()
         {
-            TypeLayout.Register<IsProgram>("IsProgram");
-            TypeLayout.Register<IsTransform>("IsTransform");
-            TypeLayout.Register<Position>("Position");
-            TypeLayout.Register<Rotation>("Rotation");
-            TypeLayout.Register<WorldRotation>("WorldRotation");
-            TypeLayout.Register<Scale>("Scale");
-            TypeLayout.Register<Anchor>("Anchor");
-            TypeLayout.Register<Pivot>("Pivot");
-            TypeLayout.Register<LocalToWorld>("LocalToWorld");
+            TypeLayout.Register<IsProgram>();
+            TypeLayout.Register<IsTransform>();
+            TypeLayout.Register<Position>();
+            TypeLayout.Register<Rotation>();
+            TypeLayout.Register<WorldRotation>();
+            TypeLayout.Register<Scale>();
+            TypeLayout.Register<Anchor>();
+            TypeLayout.Register<Pivot>();
+            TypeLayout.Register<LocalToWorld>();
         }
 
         protected override void SetUp()
