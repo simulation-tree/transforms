@@ -54,52 +54,13 @@ namespace Transforms
         public readonly Vector3 LocalRight => Vector3.Transform(Vector3.UnitX, LocalRotation);
         public readonly Vector3 LocalUp => Vector3.Transform(Vector3.UnitY, LocalRotation);
         public readonly Vector3 LocalForward => Vector3.Transform(Vector3.UnitZ, LocalRotation);
-
-        public readonly Vector3 WorldPosition
-        {
-            get
-            {
-                return entity.GetComponent<LocalToWorld>().Position;
-            }
-            set
-            {
-                Matrix4x4 wtl = Matrix4x4.Identity;
-                Entity parent = entity.GetParent();
-                if (parent != default)
-                {
-                    Matrix4x4.Invert(parent.GetComponent(Components.LocalToWorld.Default).value, out wtl);
-                }
-
-                LocalPosition = Vector3.Transform(value, wtl);
-                //todo: fault: local to world isnt being updated, this should be ok because the design is that
-                //ltw updates after an iteration, so perhaps these setters for world should be gone
-            }
-        }
-
-        public readonly Quaternion WorldRotation
-        {
-            get
-            {
-                return entity.GetComponent<WorldRotation>().value;
-            }
-            set
-            {
-                Entity parent = entity.GetParent();
-                Matrix4x4 wtl = Matrix4x4.Identity;
-                if (parent != default)
-                {
-                    Matrix4x4.Invert(parent.GetComponent(Components.LocalToWorld.Default).value, out wtl);
-                }
-
-                LocalRotation = Quaternion.Normalize(Quaternion.CreateFromRotationMatrix(wtl) * value);
-            }
-        }
-
+        public readonly Vector3 WorldPosition => entity.GetComponent<LocalToWorld>().Position;
+        public readonly Quaternion WorldRotation => entity.GetComponent<WorldRotation>().value;
         public readonly Vector3 WorldScale => entity.GetComponent<LocalToWorld>().Scale;
         public readonly Vector3 WorldRight => Vector3.Transform(Vector3.UnitX, WorldRotation);
         public readonly Vector3 WorldUp => Vector3.Transform(Vector3.UnitY, WorldRotation);
         public readonly Vector3 WorldForward => Vector3.Transform(Vector3.UnitZ, WorldRotation);
-        public readonly Matrix4x4 LocalToWorld => entity.GetComponent<LocalToWorld>().value;
+        public readonly LocalToWorld LocalToWorld => entity.GetComponent<LocalToWorld>();
 
         readonly uint IEntity.Value => entity.value;
         readonly World IEntity.World => entity.world;

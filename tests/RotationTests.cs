@@ -32,5 +32,16 @@ namespace Transforms.Tests
                 Assert.That(actualDirection.Z, Is.EqualTo(desiredDirection.Z).Within(0.001f));
             }
         }
+
+        [Test]
+        public void VerifyDownIsDown()
+        {
+            Vector3 direction = -Vector3.UnitY;
+            Quaternion rotation = Rotation.FromDirection(direction).value;
+            Vector3 actualDirection = Vector3.Transform(Vector3.UnitZ, rotation);
+            Assert.That(actualDirection.X, Is.EqualTo(direction.X).Within(0.001f));
+            Assert.That(actualDirection.Y, Is.EqualTo(direction.Y).Within(0.001f));
+            Assert.That(actualDirection.Z, Is.EqualTo(direction.Z).Within(0.001f));
+        }
     }
 }

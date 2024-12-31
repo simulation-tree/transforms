@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using Worlds;
+using static Worlds.Chunk;
 
 namespace Transforms.Components
 {
@@ -78,6 +79,28 @@ namespace Transforms.Components
         public readonly override int GetHashCode()
         {
             return HashCode.Combine(value);
+        }
+
+        public readonly Vector3 TransformInverse(Vector3 position)
+        {
+            Matrix4x4.Invert(value, out Matrix4x4 invValue);
+            return Vector3.Transform(position, invValue);
+        }
+
+        public readonly Vector3 Transform(Vector3 position)
+        {
+            return Vector3.Transform(position, value);
+        }
+
+        public readonly Quaternion TransformInverse(Quaternion rotation)
+        {
+            Matrix4x4.Invert(value, out Matrix4x4 invValue);
+            return Quaternion.Normalize(Quaternion.CreateFromRotationMatrix(invValue) * rotation);
+        }
+
+        public readonly Quaternion Transform(Quaternion rotation)
+        {
+            return Quaternion.Normalize(Quaternion.CreateFromRotationMatrix(value) * rotation);
         }
 
         public static bool operator ==(LocalToWorld left, LocalToWorld right)

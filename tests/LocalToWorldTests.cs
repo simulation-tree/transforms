@@ -110,10 +110,10 @@ namespace Transforms.Tests
             Transform parentTransform = new(world, new(2f, 4f, -32f), Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathF.PI * 0.25f), new(2f, 2f, 2f));
             Transform transform = new(world);
             transform.SetParent(parentTransform);
-            transform.WorldPosition = new(1f, 2f, 3f);
+            transform.LocalPosition = parentTransform.LocalToWorld.TransformInverse(new Vector3(1, 2, 3));
             Vector3 localPosition = transform.LocalPosition;
-            Matrix4x4 parentLtw = parentTransform.LocalToWorld;
-            Vector3 worldPosition = Vector3.Transform(localPosition, parentLtw);
+            LocalToWorld parentLtw = parentTransform.LocalToWorld;
+            Vector3 worldPosition = parentLtw.Transform(localPosition);
             Assert.That(worldPosition.X, Is.EqualTo(1f).Within(0.001f));
             Assert.That(worldPosition.Y, Is.EqualTo(2f).Within(0.001f));
             Assert.That(worldPosition.Z, Is.EqualTo(3f).Within(0.001f));
