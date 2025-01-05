@@ -67,7 +67,7 @@ namespace Transforms
 
         readonly Definition IEntity.GetDefinition(Schema schema)
         {
-            return new Definition().AddComponentTypes<IsTransform, LocalToWorld, Position>(schema);
+            return new Definition().AddComponentTypes<LocalToWorld, Position>(schema).AddTagType<IsTransform>(schema);
         }
 
         public Transform(World world, uint existingEntity)
@@ -77,12 +77,14 @@ namespace Transforms
 
         public Transform(World world)
         {
-            entity = new Entity<IsTransform, Position, Rotation, Scale, LocalToWorld, WorldRotation>(world, default, Position.Default, Rotation.Default, Scale.Default, Components.LocalToWorld.Default, Components.WorldRotation.Default).AsEntity().As<Transform>();
+            entity = new Entity<Position, Rotation, Scale, LocalToWorld, WorldRotation>(world, Position.Default, Rotation.Default, Scale.Default, Components.LocalToWorld.Default, Components.WorldRotation.Default).AsEntity().As<Transform>();
+            entity.AddTag<IsTransform>();
         }
 
         public Transform(World world, Vector3 position, Quaternion rotation, Vector3 scale)
         {
-            entity = new Entity<IsTransform, Position, Rotation, Scale, LocalToWorld, WorldRotation>(world, default, new Position(position), new Rotation(rotation), new Scale(scale), new LocalToWorld(position, rotation, scale), new WorldRotation(rotation)).AsEntity().As<Transform>();
+            entity = new Entity<Position, Rotation, Scale, LocalToWorld, WorldRotation>(world, new Position(position), new Rotation(rotation), new Scale(scale), new LocalToWorld(position, rotation, scale), new WorldRotation(rotation)).AsEntity().As<Transform>();
+            entity.AddTag<IsTransform>();
         }
 
         public readonly void Dispose()

@@ -28,8 +28,8 @@ namespace Transforms.Tests
         {
             base.SetUp();
             world = new();
+            world.Schema.RegisterTag<IsTransform>();
             world.Schema.RegisterComponent<IsProgram>();
-            world.Schema.RegisterComponent<IsTransform>();
             world.Schema.RegisterComponent<Position>();
             world.Schema.RegisterComponent<Rotation>();
             world.Schema.RegisterComponent<WorldRotation>();

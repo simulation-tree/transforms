@@ -2,7 +2,7 @@
 
 namespace Transforms.Components
 {
-    [Component]
+    [Tag]
     public struct IsTransform
     {
 
