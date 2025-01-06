@@ -65,9 +65,10 @@ namespace Transforms
         readonly uint IEntity.Value => entity.value;
         readonly World IEntity.World => entity.world;
 
-        readonly Definition IEntity.GetDefinition(Schema schema)
+        readonly void IEntity.Describe(ref Archetype archetype)
         {
-            return new Definition().AddComponentTypes<LocalToWorld, Position>(schema).AddTagType<IsTransform>(schema);
+            archetype.AddComponentType<LocalToWorld>();
+            archetype.AddTagType<IsTransform>();
         }
 
         public Transform(World world, uint existingEntity)
