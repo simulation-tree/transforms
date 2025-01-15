@@ -24,6 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\types\source\Types.csproj" />
 		<ProjectReference Include="..\..\unmanaged\tests\Unmanaged.Tests.csproj" />
 		<ProjectReference Include="..\source\Transforms.csproj" />
 	</ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using Simulation;
 using Simulation.Components;
 using Transforms.Components;
+using Types;
 using Unmanaged.Tests;
 using Worlds;
 
