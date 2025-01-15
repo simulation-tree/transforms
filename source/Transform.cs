@@ -9,6 +9,9 @@ namespace Transforms
     {
         private readonly Entity entity;
 
+        /// <summary>
+        /// Position of this entity relative to the parent entity.
+        /// </summary>
         public readonly ref Vector3 LocalPosition
         {
             get
@@ -23,6 +26,9 @@ namespace Transforms
             }
         }
 
+        /// <summary>
+        /// Rotation of this entity relative to the parent entity.
+        /// </summary>
         public readonly ref Quaternion LocalRotation
         {
             get
@@ -37,6 +43,9 @@ namespace Transforms
             }
         }
 
+        /// <summary>
+        /// Scale of this entity relative to the parent entity.
+        /// </summary>
         public readonly ref Vector3 LocalScale
         {
             get
