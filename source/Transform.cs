@@ -5,6 +5,7 @@ using Worlds;
 
 namespace Transforms
 {
+    //todo: add extension methods
     public readonly struct Transform : ITransform
     {
         private readonly Entity entity;
