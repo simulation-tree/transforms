@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using Transforms.Components;
 using Unmanaged;
 using Worlds;
@@ -6,7 +7,7 @@ using Worlds;
 namespace Transforms
 {
     //todo: add extension methods
-    public readonly struct Transform : ITransform
+    public readonly struct Transform : ITransform, IEquatable<Transform>
     {
         private readonly Entity entity;
 
@@ -115,9 +116,34 @@ namespace Transforms
             return entity.ToString(buffer);
         }
 
+        public readonly override bool Equals(object? obj)
+        {
+            return obj is Transform transform && Equals(transform);
+        }
+
+        public readonly bool Equals(Transform other)
+        {
+            return entity.Equals(other.entity);
+        }
+
+        public readonly override int GetHashCode()
+        {
+            return entity.GetHashCode();
+        }
+
         public static implicit operator Entity(Transform transform)
         {
             return transform.entity;
+        }
+
+        public static bool operator ==(Transform left, Transform right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Transform left, Transform right)
+        {
+            return !(left == right);
         }
     }
 }
