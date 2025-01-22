@@ -195,7 +195,7 @@ namespace Transforms.Components
                     throw new FormatException($"No number found in text input `{text.ToString()}`");
                 }
 
-                float number = float.Parse(text.Slice(startIndex, endIndex - startIndex).AsSystemSpan());
+                float number = float.Parse(text.Slice(startIndex, endIndex - startIndex));
                 if (negative)
                 {
                     number = -number;
@@ -278,7 +278,7 @@ namespace Transforms.Components
 
             public static implicit operator value(string text)
             {
-                return new(text.AsUSpan());
+                return new(text.AsSpan());
             }
 
             [Conditional("DEBUG")]
