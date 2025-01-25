@@ -1,10 +1,10 @@
 ﻿using Types;
-using Unmanaged.Tests;
 using Worlds;
+using Worlds.Tests;
 
 namespace Transforms.Tests
 {
-    public abstract class TransformTests : UnmanagedTests
+    public abstract class TransformTests : WorldTests
     {
         static TransformTests()
         {
@@ -12,16 +12,11 @@ namespace Transforms.Tests
             TypeRegistry.Load<Simulation.TypeBank>();
         }
 
-        protected virtual Schema CreateSchema()
+        protected override Schema CreateSchema()
         {
-            Schema schema = new();
+            Schema schema = base.CreateSchema();
             schema.Load<Transforms.SchemaBank>();
             return schema;
-        }
-
-        protected World CreateWorld()
-        {
-            return new(CreateSchema());
         }
     }
 }
