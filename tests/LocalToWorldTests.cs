@@ -107,6 +107,7 @@ namespace Transforms.Tests
         [Test]
         public void SetWorldPositionWithInverseLTW()
         {
+            using World world = CreateWorld();
             Transform parentTransform = new(world, new(2f, 4f, -32f), Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathF.PI * 0.25f), new(2f, 2f, 2f));
             Transform transform = new(world);
             transform.SetParent(parentTransform);

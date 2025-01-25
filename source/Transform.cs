@@ -6,7 +6,6 @@ using Worlds;
 
 namespace Transforms
 {
-    //todo: add extension methods
     public readonly struct Transform : ITransform, IEquatable<Transform>
     {
         private readonly Entity entity;
