@@ -1,4 +1,5 @@
-﻿using Types;
+﻿using Simulation;
+using Types;
 using Worlds;
 using Worlds.Tests;
 
@@ -8,15 +9,15 @@ namespace Transforms.Tests
     {
         static TransformTests()
         {
-            TypeRegistry.Load<Transforms.TypeBank>();
-            TypeRegistry.Load<Simulation.Core.TypeBank>();
+            TypeRegistry.Load<TransformsTypeBank>();
+            TypeRegistry.Load<SimulationTypeBank>();
         }
 
         protected override Schema CreateSchema()
         {
             Schema schema = base.CreateSchema();
-            schema.Load<Transforms.SchemaBank>();
-            schema.Load<Simulation.Core.SchemaBank>();
+            schema.Load<TransformsSchemaBank>();
+            schema.Load<SimulationSchemaBank>();
             return schema;
         }
     }
