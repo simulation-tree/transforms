@@ -1,12 +1,11 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using Transforms.Components;
 using Unmanaged;
 using Worlds;
 
 namespace Transforms
 {
-    public readonly partial struct Transform : ITransform
+    public readonly partial struct Transform : IEntity
     {
         /// <summary>
         /// Position of this entity relative to the parent entity.
