@@ -6,10 +6,8 @@ using Worlds;
 
 namespace Transforms
 {
-    public readonly struct Transform : ITransform, IEquatable<Transform>
+    public readonly partial struct Transform : ITransform
     {
-        private readonly Entity entity;
-
         /// <summary>
         /// Position of this entity relative to the parent entity.
         /// </summary>
@@ -17,13 +15,15 @@ namespace Transforms
         {
             get
             {
-                if (!entity.ContainsComponent<Position>())
+                ref Position component = ref TryGetComponent<Position>(out bool contains);
+                if (contains)
                 {
-                    entity.AddComponent(Position.Default);
+                    return ref component.value;
                 }
-
-                ref Position component = ref entity.GetComponent<Position>();
-                return ref component.value;
+                else
+                {
+                    return ref AddComponent(Position.Default).value;
+                }
             }
         }
 
@@ -34,13 +34,15 @@ namespace Transforms
         {
             get
             {
-                if (!entity.ContainsComponent<Rotation>())
+                ref Rotation component = ref TryGetComponent<Rotation>(out bool contains);
+                if (contains)
                 {
-                    entity.AddComponent(Rotation.Default);
+                    return ref component.value;
                 }
-
-                ref Rotation component = ref entity.GetComponent<Rotation>();
-                return ref component.value;
+                else
+                {
+                    return ref AddComponent(Rotation.Default).value;
+                }
             }
         }
 
@@ -51,56 +53,47 @@ namespace Transforms
         {
             get
             {
-                if (!entity.ContainsComponent<Scale>())
+                ref Scale component = ref TryGetComponent<Scale>(out bool contains);
+                if (contains)
                 {
-                    entity.AddComponent(Scale.Default);
+                    return ref component.value;
                 }
-
-                ref Scale component = ref entity.GetComponent<Scale>();
-                return ref component.value;
+                else
+                {
+                    return ref AddComponent(Scale.Default).value;
+                }
             }
         }
 
         public readonly Vector3 LocalRight => Vector3.Transform(Vector3.UnitX, LocalRotation);
         public readonly Vector3 LocalUp => Vector3.Transform(Vector3.UnitY, LocalRotation);
         public readonly Vector3 LocalForward => Vector3.Transform(Vector3.UnitZ, LocalRotation);
-        public readonly Vector3 WorldPosition => entity.GetComponent<LocalToWorld>().Position;
-        public readonly Quaternion WorldRotation => entity.GetComponent<WorldRotation>().value;
-        public readonly Vector3 WorldScale => entity.GetComponent<LocalToWorld>().Scale;
+        public readonly Vector3 WorldPosition => GetComponent<LocalToWorld>().Position;
+        public readonly Quaternion WorldRotation => GetComponent<WorldRotation>().value;
+        public readonly Vector3 WorldScale => GetComponent<LocalToWorld>().Scale;
         public readonly Vector3 WorldRight => Vector3.Transform(Vector3.UnitX, WorldRotation);
         public readonly Vector3 WorldUp => Vector3.Transform(Vector3.UnitY, WorldRotation);
         public readonly Vector3 WorldForward => Vector3.Transform(Vector3.UnitZ, WorldRotation);
-        public readonly LocalToWorld LocalToWorld => entity.GetComponent<LocalToWorld>();
+        public readonly LocalToWorld LocalToWorld => GetComponent<LocalToWorld>();
 
-        readonly uint IEntity.Value => entity.value;
-        readonly World IEntity.World => entity.world;
+        public Transform(World world)
+        {
+            this.world = world;
+            value = world.CreateEntity(Position.Default, Rotation.Default, Scale.Default, LocalToWorld.Default, Components.WorldRotation.Default);
+            AddTag<IsTransform>();
+        }
+
+        public Transform(World world, Vector3 position, Quaternion rotation, Vector3 scale)
+        {
+            this.world = world;
+            value = world.CreateEntity(new Position(position), new Rotation(rotation), new Scale(scale), new LocalToWorld(position, rotation, scale), new WorldRotation(rotation));
+            AddTag<IsTransform>();
+        }
 
         readonly void IEntity.Describe(ref Archetype archetype)
         {
             archetype.AddComponentType<LocalToWorld>();
             archetype.AddTagType<IsTransform>();
-        }
-
-        public Transform(World world, uint existingEntity)
-        {
-            entity = new(world, existingEntity);
-        }
-
-        public Transform(World world)
-        {
-            entity = new Entity<Position, Rotation, Scale, LocalToWorld, WorldRotation>(world, Position.Default, Rotation.Default, Scale.Default, Components.LocalToWorld.Default, Components.WorldRotation.Default).AsEntity().As<Transform>();
-            entity.AddTag<IsTransform>();
-        }
-
-        public Transform(World world, Vector3 position, Quaternion rotation, Vector3 scale)
-        {
-            entity = new Entity<Position, Rotation, Scale, LocalToWorld, WorldRotation>(world, new Position(position), new Rotation(rotation), new Scale(scale), new LocalToWorld(position, rotation, scale), new WorldRotation(rotation)).AsEntity().As<Transform>();
-            entity.AddTag<IsTransform>();
-        }
-
-        public readonly void Dispose()
-        {
-            entity.Dispose();
         }
 
         public readonly override string ToString()
@@ -112,37 +105,7 @@ namespace Transforms
 
         public readonly uint ToString(USpan<char> buffer)
         {
-            return entity.ToString(buffer);
-        }
-
-        public readonly override bool Equals(object? obj)
-        {
-            return obj is Transform transform && Equals(transform);
-        }
-
-        public readonly bool Equals(Transform other)
-        {
-            return entity.Equals(other.entity);
-        }
-
-        public readonly override int GetHashCode()
-        {
-            return entity.GetHashCode();
-        }
-
-        public static implicit operator Entity(Transform transform)
-        {
-            return transform.entity;
-        }
-
-        public static bool operator ==(Transform left, Transform right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(Transform left, Transform right)
-        {
-            return !(left == right);
+            return value.ToString(buffer);
         }
     }
 }
