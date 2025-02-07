@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Numerics;
 using Worlds;
-using static Worlds.Chunk;
 
 namespace Transforms.Components
 {
