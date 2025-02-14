@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Numerics;
-using Worlds;
 
 namespace Transforms.Components
 {
-    [Component]
     public struct LocalToWorld : IEquatable<LocalToWorld>
     {
         public static readonly LocalToWorld Default = new(Components.Position.Default.value, Components.Rotation.Default.value, Components.Scale.Default.value);

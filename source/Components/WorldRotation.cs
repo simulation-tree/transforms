@@ -1,9 +1,7 @@
 ﻿using System.Numerics;
-using Worlds;
 
 namespace Transforms.Components
 {
-    [Component]
     public struct WorldRotation
     {
         public static readonly WorldRotation Default = new(Quaternion.Identity);

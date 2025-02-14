@@ -1,10 +1,8 @@
 ﻿using System.Numerics;
 using Unmanaged;
-using Worlds;
 
 namespace Transforms.Components
 {
-    [Component]
     public struct Position
     {
         public static readonly Position Default = new(Vector3.Zero);

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Numerics;
-using Worlds;
 
 namespace Transforms.Components
 {
-    [Component]
     public struct EulerAngles
     {
         public static readonly EulerAngles Default = new(0, 0, 0);

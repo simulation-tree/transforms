@@ -1,10 +1,8 @@
 ﻿using System.Numerics;
 using Unmanaged;
-using Worlds;
 
 namespace Transforms.Components
 {
-    [Component]
     public struct Scale
     {
         public static readonly Scale Default = new(Vector3.One);
