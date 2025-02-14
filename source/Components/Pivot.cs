@@ -11,6 +11,7 @@ namespace Transforms.Components
         public static readonly Pivot BottomLeft = new(0f, 0f, 0f);
         public static readonly Pivot TopRight = new(1f, 1f, 0f);
         public static readonly Pivot TopLeft = new(0f, 1f, 0f);
+        public static readonly Pivot Default = default;
 
         public Vector3 value;
 

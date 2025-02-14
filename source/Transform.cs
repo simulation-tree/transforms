@@ -45,6 +45,54 @@ namespace Transforms
             }
         }
 
+        public readonly ref Vector3 EulerAngles
+        {
+            get
+            {
+                ref EulerAngles component = ref TryGetComponent<EulerAngles>(out bool contains);
+                if (contains)
+                {
+                    return ref component.value;
+                }
+                else
+                {
+                    return ref AddComponent(Components.EulerAngles.Default).value;
+                }
+            }
+        }
+
+        public readonly ref Anchor Anchor
+        {
+            get
+            {
+                ref Anchor component = ref TryGetComponent<Anchor>(out bool contains);
+                if (contains)
+                {
+                    return ref component;
+                }
+                else
+                {
+                    return ref AddComponent(Components.Anchor.Default);
+                }
+            }
+        }
+
+        public readonly ref Pivot Pivot
+        {
+            get
+            {
+                ref Pivot component = ref TryGetComponent<Pivot>(out bool contains);
+                if (contains)
+                {
+                    return ref component;
+                }
+                else
+                {
+                    return ref AddComponent(Components.Pivot.Default);
+                }
+            }
+        }
+
         /// <summary>
         /// Scale of this entity relative to the parent entity.
         /// </summary>
