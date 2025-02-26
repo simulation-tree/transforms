@@ -15,14 +15,13 @@ namespace Transforms
             get
             {
                 ref Position component = ref TryGetComponent<Position>(out bool contains);
-                if (contains)
+                if (!contains)
                 {
-                    return ref component.value;
+                    component = ref AddComponent<Position>();
+                    component = Position.Default;
                 }
-                else
-                {
-                    return ref AddComponent(Position.Default).value;
-                }
+
+                return ref component.value;
             }
         }
 
@@ -34,14 +33,13 @@ namespace Transforms
             get
             {
                 ref Rotation component = ref TryGetComponent<Rotation>(out bool contains);
-                if (contains)
+                if (!contains)
                 {
-                    return ref component.value;
+                    component = ref AddComponent<Rotation>();
+                    component = Rotation.Default;
                 }
-                else
-                {
-                    return ref AddComponent(Rotation.Default).value;
-                }
+
+                return ref component.value;
             }
         }
 
@@ -50,14 +48,13 @@ namespace Transforms
             get
             {
                 ref EulerAngles component = ref TryGetComponent<EulerAngles>(out bool contains);
-                if (contains)
+                if (!contains)
                 {
-                    return ref component.value;
+                    component = ref AddComponent<EulerAngles>();
+                    component = Components.EulerAngles.Default;
                 }
-                else
-                {
-                    return ref AddComponent(Components.EulerAngles.Default).value;
-                }
+
+                return ref component.value;
             }
         }
 
@@ -66,14 +63,13 @@ namespace Transforms
             get
             {
                 ref Anchor component = ref TryGetComponent<Anchor>(out bool contains);
-                if (contains)
+                if (!contains)
                 {
-                    return ref component;
+                    component = ref AddComponent<Anchor>();
+                    component = Anchor.Default;
                 }
-                else
-                {
-                    return ref AddComponent(Components.Anchor.Default);
-                }
+
+                return ref component;
             }
         }
 
@@ -82,14 +78,13 @@ namespace Transforms
             get
             {
                 ref Pivot component = ref TryGetComponent<Pivot>(out bool contains);
-                if (contains)
+                if (!contains)
                 {
-                    return ref component;
+                    component = ref AddComponent<Pivot>();
+                    component = Pivot.Default;
                 }
-                else
-                {
-                    return ref AddComponent(Components.Pivot.Default);
-                }
+
+                return ref component;
             }
         }
 
@@ -101,14 +96,13 @@ namespace Transforms
             get
             {
                 ref Scale component = ref TryGetComponent<Scale>(out bool contains);
-                if (contains)
+                if (!contains)
                 {
-                    return ref component.value;
+                    component = ref AddComponent<Scale>();
+                    component = Scale.Default;
                 }
-                else
-                {
-                    return ref AddComponent(Scale.Default).value;
-                }
+
+                return ref component.value;
             }
         }
 
