@@ -31,7 +31,7 @@ namespace Transforms.Components
         {
             USpan<char> buffer = stackalloc char[32];
             uint length = ToString(buffer);
-            return buffer.Slice(0, length).ToString();
+            return buffer.GetSpan(length).ToString();
         }
 
         public readonly uint ToString(USpan<char> buffer)
