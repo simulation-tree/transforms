@@ -9,8 +9,8 @@
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
         <Title>Transforms</Title>
         <Authors>popcron</Authors>
-        <Company>game-simulations</Company>
-        <RepositoryUrl>https://github.com/game-simulations/transforms</RepositoryUrl>
+        <Company>simulation-tree</Company>
+        <RepositoryUrl>https://github.com/simulation-tree/transforms</RepositoryUrl>
         <PackageId/>
     </PropertyGroup>
 
