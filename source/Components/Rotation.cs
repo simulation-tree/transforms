@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Numerics;
-using Unmanaged;
 
 namespace Transforms.Components
 {
@@ -29,14 +28,14 @@ namespace Transforms.Components
 
         public readonly override string ToString()
         {
-            USpan<char> buffer = stackalloc char[32];
-            uint length = ToString(buffer);
-            return buffer.GetSpan(length).ToString();
+            Span<char> buffer = stackalloc char[32];
+            int length = ToString(buffer);
+            return buffer.Slice(0, length).ToString();
         }
 
-        public readonly uint ToString(USpan<char> buffer)
+        public readonly int ToString(Span<char> destination)
         {
-            return value.ToString(buffer);
+            return value.ToString(destination);
         }
 
         public static Rotation FromDirection(Vector3 forwardDirection)

@@ -1,6 +1,6 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using Transforms.Components;
-using Unmanaged;
 using Worlds;
 
 namespace Transforms
@@ -139,12 +139,12 @@ namespace Transforms
 
         public readonly override string ToString()
         {
-            USpan<char> buffer = stackalloc char[64];
-            uint length = ToString(buffer);
-            return buffer.GetSpan(length).ToString();
+            Span<char> buffer = stackalloc char[64];
+            int length = ToString(buffer);
+            return buffer.Slice(0, length).ToString();
         }
 
-        public readonly uint ToString(USpan<char> buffer)
+        public readonly int ToString(Span<char> buffer)
         {
             return value.ToString(buffer);
         }

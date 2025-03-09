@@ -1,7 +1,6 @@
 ﻿#pragma warning disable CS8981
 using System;
 using System.Diagnostics;
-using Unmanaged;
 
 namespace Transforms.Components
 {
@@ -146,14 +145,14 @@ namespace Transforms.Components
                 }
             }
 
-            public value(USpan<char> text)
+            public value(ReadOnlySpan<char> text)
             {
                 bool negative = false;
-                uint index = 0;
-                uint startIndex = 0;
+                int index = 0;
+                int startIndex = 0;
                 bool foundNumber = false;
                 bool absolute = true;
-                uint endIndex = 0;
+                int endIndex = 0;
                 while (index < text.Length)
                 {
                     char c = text[index];
@@ -213,30 +212,30 @@ namespace Transforms.Components
 
             public readonly override string ToString()
             {
-                USpan<char> buffer = stackalloc char[32];
-                uint length = ToString(buffer);
-                return buffer.GetSpan(length).ToString();
+                Span<char> buffer = stackalloc char[32];
+                int length = ToString(buffer);
+                return buffer.Slice(0, length).ToString();
             }
 
-            public readonly uint ToString(USpan<char> buffer)
+            public readonly int ToString(Span<char> destination)
             {
                 bool isRelative = Absolute;
                 float number = Number;
-                uint length = 0;
+                int length = 0;
                 if (isRelative)
                 {
-                    buffer[0] = 'r';
-                    buffer[1] = ':';
+                    destination[0] = 'r';
+                    destination[1] = ':';
                     length = 2;
                 }
                 else
                 {
-                    buffer[0] = 'a';
-                    buffer[1] = ':';
+                    destination[0] = 'a';
+                    destination[1] = ':';
                     length = 2;
                 }
 
-                length += number.ToString(buffer.Slice(length));
+                length += number.ToString(destination.Slice(length));
                 return length;
             }
 
@@ -270,7 +269,7 @@ namespace Transforms.Components
                 return value.Number;
             }
 
-            public static implicit operator value(USpan<char> text)
+            public static implicit operator value(System.Span<char> text)
             {
                 return new(text);
             }
