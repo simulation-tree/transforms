@@ -269,7 +269,7 @@ namespace Transforms.Components
                 return value.Number;
             }
 
-            public static implicit operator value(System.Span<char> text)
+            public static implicit operator value(ReadOnlySpan<char> text)
             {
                 return new(text);
             }
