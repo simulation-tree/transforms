@@ -9,8 +9,8 @@ namespace Transforms.Tests
     {
         static TransformTests()
         {
-            MetadataRegistry.Load<TransformsTypeBank>();
-            MetadataRegistry.Load<SimulationTypeBank>();
+            MetadataRegistry.Load<TransformsMetadataBank>();
+            MetadataRegistry.Load<SimulationMetadataBank>();
         }
 
         protected override Schema CreateSchema()
