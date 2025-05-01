@@ -43,21 +43,9 @@ namespace Transforms
             }
         }
 
-        public readonly ref Vector3 EulerAngles
-        {
-            get
-            {
-                ref EulerAngles component = ref TryGetComponent<EulerAngles>(out bool contains);
-                if (!contains)
-                {
-                    component = ref AddComponent<EulerAngles>();
-                    component = Components.EulerAngles.Default;
-                }
-
-                return ref component.value;
-            }
-        }
-
+        /// <summary>
+        /// The anchor of this entity relative to the parent entity.
+        /// </summary>
         public readonly ref Anchor Anchor
         {
             get
@@ -73,6 +61,9 @@ namespace Transforms
             }
         }
 
+        /// <summary>
+        /// The pivot of this entity relative to the parent entity.
+        /// </summary>
         public readonly ref Pivot Pivot
         {
             get

@@ -21,12 +21,12 @@ namespace Transforms.Components
         public static readonly Anchor Right = new(new(1f, false), new(0.5f, false), new(0f, false), new(1f, false), new(0.5f, false), new(0f, false));
         public static readonly Anchor Default = default;
 
-        public value minX;
-        public value minY;
-        public value minZ;
-        public value maxX;
-        public value maxY;
-        public value maxZ;
+        public Number minX;
+        public Number minY;
+        public Number minZ;
+        public Number maxX;
+        public Number maxY;
+        public Number maxZ;
 
 #if NET
         /// <summary>
@@ -43,7 +43,7 @@ namespace Transforms.Components
         }
 #endif
 
-        public Anchor(value minX, value minY, value minZ, value maxX, value maxY, value maxZ)
+        public Anchor(Number minX, Number minY, Number minZ, Number maxX, Number maxY, Number maxZ)
         {
             this.minX = minX;
             this.minY = minY;
@@ -78,7 +78,7 @@ namespace Transforms.Components
             return !(left == right);
         }
 
-        public struct value : IEquatable<value>
+        public struct Number : IEquatable<Number>
         {
             public const int NumberRange = 65536;
             public const int MaxNumberValue = 32768;
@@ -86,7 +86,7 @@ namespace Transforms.Components
 
             private int data;
 
-            public bool Absolute
+            public bool IsAbsolute
             {
                 readonly get
                 {
@@ -106,7 +106,7 @@ namespace Transforms.Components
                 }
             }
 
-            public float Number
+            public float Value
             {
                 readonly get
                 {
@@ -116,7 +116,7 @@ namespace Transforms.Components
                 }
                 set
                 {
-                    bool absolute = Absolute;
+                    bool absolute = IsAbsolute;
                     int valueInt = (int)(value * NumberRange) >> 1;
                     data = valueInt;
                     if (absolute)
@@ -130,12 +130,12 @@ namespace Transforms.Components
                 }
             }
 
-            public value(float number, bool fromEdge)
+            public Number(float value, bool absolute)
             {
-                ThrowIfOutOfRange(number);
+                ThrowIfOutOfRange(value);
 
-                data = (int)(number * NumberRange) >> 1;
-                if (fromEdge)
+                data = (int)(value * NumberRange) >> 1;
+                if (absolute)
                 {
                     data &= ~1;
                 }
@@ -145,7 +145,7 @@ namespace Transforms.Components
                 }
             }
 
-            public value(ReadOnlySpan<char> text)
+            public Number(ReadOnlySpan<char> text)
             {
                 bool negative = false;
                 int index = 0;
@@ -199,14 +199,22 @@ namespace Transforms.Components
                     number = -number;
                 }
 
-                Absolute = absolute;
                 if (absolute)
                 {
-                    Number = number;
+                    data &= ~1;
                 }
                 else
                 {
-                    Number = number / 100f;
+                    data |= 1;
+                }
+
+                if (absolute)
+                {
+                    Value = number;
+                }
+                else
+                {
+                    Value = number / 100f;
                 }
             }
 
@@ -219,8 +227,8 @@ namespace Transforms.Components
 
             public readonly int ToString(Span<char> destination)
             {
-                bool isRelative = Absolute;
-                float number = Number;
+                bool isRelative = IsAbsolute;
+                float number = Value;
                 int length = 0;
                 if (isRelative)
                 {
@@ -241,10 +249,10 @@ namespace Transforms.Components
 
             public readonly override bool Equals(object? obj)
             {
-                return obj is value value && Equals(value);
+                return obj is Number value && Equals(value);
             }
 
-            public readonly bool Equals(value other)
+            public readonly bool Equals(Number other)
             {
                 return data == other.data;
             }
@@ -254,27 +262,27 @@ namespace Transforms.Components
                 return data.GetHashCode();
             }
 
-            public static bool operator ==(value left, value right)
+            public static bool operator ==(Number left, Number right)
             {
                 return left.Equals(right);
             }
 
-            public static bool operator !=(value left, value right)
+            public static bool operator !=(Number left, Number right)
             {
                 return !(left == right);
             }
 
-            public static implicit operator float(value value)
+            public static implicit operator float(Number value)
             {
-                return value.Number;
+                return value.Value;
             }
 
-            public static implicit operator value(ReadOnlySpan<char> text)
+            public static implicit operator Number(ReadOnlySpan<char> text)
             {
                 return new(text);
             }
 
-            public static implicit operator value(string text)
+            public static implicit operator Number(string text)
             {
                 return new(text.AsSpan());
             }
