@@ -14,10 +14,11 @@ namespace Transforms
         {
             get
             {
-                ref Position component = ref TryGetComponent<Position>(out bool contains);
+                int type = world.Schema.GetComponentType<Position>();
+                ref Position component = ref TryGetComponent<Position>(type, out bool contains);
                 if (!contains)
                 {
-                    component = ref AddComponent<Position>();
+                    component = ref AddComponent<Position>(type);
                     component = Position.Default;
                 }
 
@@ -32,10 +33,11 @@ namespace Transforms
         {
             get
             {
-                ref Rotation component = ref TryGetComponent<Rotation>(out bool contains);
+                int type = world.Schema.GetComponentType<Rotation>();
+                ref Rotation component = ref TryGetComponent<Rotation>(type, out bool contains);
                 if (!contains)
                 {
-                    component = ref AddComponent<Rotation>();
+                    component = ref AddComponent<Rotation>(type);
                     component = Rotation.Default;
                 }
 
@@ -50,10 +52,11 @@ namespace Transforms
         {
             get
             {
-                ref Anchor component = ref TryGetComponent<Anchor>(out bool contains);
+                int type = world.Schema.GetComponentType<Anchor>();
+                ref Anchor component = ref TryGetComponent<Anchor>(type, out bool contains);
                 if (!contains)
                 {
-                    component = ref AddComponent<Anchor>();
+                    component = ref AddComponent<Anchor>(type);
                     component = Anchor.Default;
                 }
 
@@ -64,18 +67,19 @@ namespace Transforms
         /// <summary>
         /// The pivot of this entity relative to the parent entity.
         /// </summary>
-        public readonly ref Pivot Pivot
+        public readonly ref Vector3 Pivot
         {
             get
             {
-                ref Pivot component = ref TryGetComponent<Pivot>(out bool contains);
+                int type = world.Schema.GetComponentType<Pivot>();
+                ref Pivot component = ref TryGetComponent<Pivot>(type, out bool contains);
                 if (!contains)
                 {
-                    component = ref AddComponent<Pivot>();
-                    component = Pivot.Default;
+                    component = ref AddComponent<Pivot>(type);
+                    component = Components.Pivot.Default;
                 }
 
-                return ref component;
+                return ref component.value;
             }
         }
 
@@ -86,10 +90,11 @@ namespace Transforms
         {
             get
             {
-                ref Scale component = ref TryGetComponent<Scale>(out bool contains);
+                int type = world.Schema.GetComponentType<Scale>();
+                ref Scale component = ref TryGetComponent<Scale>(type, out bool contains);
                 if (!contains)
                 {
-                    component = ref AddComponent<Scale>();
+                    component = ref AddComponent<Scale>(type);
                     component = Scale.Default;
                 }
 
