@@ -12,6 +12,13 @@ using data from these components, relative to the parent:
 * `Anchor`
 * `Pivot`
 
+### Axis convention
+
+This is only relevant for rotations when working with them manually:
+* X axis is right (pitch)
+* Y axis is up (yaw)
+* Z axis is forward (roll)
+
 ### Anchoring to corners
 
 The `Anchor` component is able to describe both relative and absolute values. The example

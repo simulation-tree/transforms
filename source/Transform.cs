@@ -102,17 +102,59 @@ namespace Transforms
             }
         }
 
+        /// <summary>
+        /// Vector pointing to the right of this entity relative to the parent entity.
+        /// </summary>
         public readonly Vector3 LocalRight => Vector3.Transform(Vector3.UnitX, LocalRotation);
+
+        /// <summary>
+        /// Vector pointing up of this entity relative to the parent entity.
+        /// </summary>
         public readonly Vector3 LocalUp => Vector3.Transform(Vector3.UnitY, LocalRotation);
+
+        /// <summary>
+        /// Vector pointing forward of this entity relative to the parent entity.
+        /// </summary>
         public readonly Vector3 LocalForward => Vector3.Transform(Vector3.UnitZ, LocalRotation);
+
+        /// <summary>
+        /// Position of this entity in world space.
+        /// </summary>
         public readonly Vector3 WorldPosition => GetComponent<LocalToWorld>().Position;
+
+        /// <summary>
+        /// Rotation of this entity in world space.
+        /// </summary>
         public readonly Quaternion WorldRotation => GetComponent<WorldRotation>().value;
+
+        /// <summary>
+        /// Scale of this entity in world space.
+        /// </summary>
         public readonly Vector3 WorldScale => GetComponent<LocalToWorld>().Scale;
+
+        /// <summary>
+        /// Vector pointing to the right of this entity in world space.
+        /// </summary>
         public readonly Vector3 WorldRight => Vector3.Transform(Vector3.UnitX, WorldRotation);
+
+        /// <summary>
+        /// Vector pointing up of this entity in world space.
+        /// </summary>
         public readonly Vector3 WorldUp => Vector3.Transform(Vector3.UnitY, WorldRotation);
+
+        /// <summary>
+        /// Vector pointing forward of this entity in world space.
+        /// </summary>
         public readonly Vector3 WorldForward => Vector3.Transform(Vector3.UnitZ, WorldRotation);
+
+        /// <summary>
+        /// The final calculated matrix for transforming the local components of this entity to world space.
+        /// </summary>
         public readonly LocalToWorld LocalToWorld => GetComponent<LocalToWorld>();
 
+        /// <summary>
+        /// Creates a new transform entity.
+        /// </summary>
         public Transform(World world)
         {
             this.world = world;
@@ -120,6 +162,9 @@ namespace Transforms
             AddTag<IsTransform>();
         }
 
+        /// <summary>
+        /// Creates a new transform entity with the given <paramref name="position"/>, <paramref name="rotation"/>, and <paramref name="scale"/>.
+        /// </summary>
         public Transform(World world, Vector3 position, Quaternion rotation, Vector3 scale)
         {
             this.world = world;
@@ -133,6 +178,7 @@ namespace Transforms
             archetype.AddTagType<IsTransform>();
         }
 
+        /// <inheritdoc/>
         public readonly override string ToString()
         {
             Span<char> buffer = stackalloc char[64];
@@ -140,6 +186,7 @@ namespace Transforms
             return buffer.Slice(0, length).ToString();
         }
 
+        /// <inheritdoc/>
         public readonly int ToString(Span<char> buffer)
         {
             return value.ToString(buffer);

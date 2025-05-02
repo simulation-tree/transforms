@@ -4,7 +4,6 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <IsAotCompatible>True</IsAotCompatible>
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
         <Title>Transforms</Title>
@@ -12,7 +11,16 @@
         <Company>simulation-tree</Company>
         <RepositoryUrl>https://github.com/simulation-tree/transforms</RepositoryUrl>
         <PackageId />
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Include="..\README.md">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\worlds\core\Worlds.Core.csproj" />
