@@ -1,31 +1,57 @@
 # Transforms
-Calculates 3D transformations for objects within a hierarchy.
 
-### Dependencies
-* [Simulation](https://github.com/simulation-tree/simulation)
+For representing a hierarchy of objects in 3D space.
 
 ### Behaviour
-Entities with an `IsTransform` component will have a `LocalToWorld` component built
-using data from these components (relative to the parent entity), whenever the `TransformUpdate` event
-is polled:
+
+Entities with the `IsTransform` tag will have a `LocalToWorld` component calculated
+using data from these components, relative to the parent:
 * `Position`
 * `Rotation`
 * `Scale`
+* `Anchor`
+* `Pivot`
 
-### Example
+### Axis convention
+
+This is only relevant for rotations when working with them manually:
+* X axis is right (pitch)
+* Y axis is up (yaw)
+* Z axis is forward (roll)
+
+### Anchoring to corners
+
+The `Anchor` component is able to describe both relative and absolute values. The example
+below makes the child transform have a 10 pixel border inside the parent:
 ```cs
-eint parentObj = world.CreateEntity();
-world.AddComponent(parentObj, new IsTransform());
-world.AddComponent(parentObj, new Scale(2, 2, 2));
+Transform parent = new(world);
+parent.LocalScale = new(100, 100, 0);
+parent.LocalPosition = new(50, 50, 0);
 
-eint obj = world.CreateEntity(parentObj);
-world.AddComponent(obj, new IsTransform());
-world.AddComponent(obj, new Position(0, 5, 0));
+Transform child = new(world);
+child.Anchor = new(10, 10, 0, 10, 10, 0, Anchor.Relativeness.X | Anchor.Relativeness.Y);
 
-world.Submit(new TransformUpdate());
-world.Poll();
+//after simulating, child will be at position (60, 60) with size (80, 80)
+```
 
-LocalToWorld ltw = world.GetComponent<LocalToWorld>(obj));
-Vector3 worldPosition = ltw.Position;
-Matrix4x4 matrix = ltw.value;
+### Reading world state
+
+Accessing world position, rotation or scale is can be done through properties of a transform
+entity:
+```cs
+Transform a = ...
+Vector3 position = a.WorldPosition;
+Quaternion rotation = a.WorldRotation;
+Vector3 scale = a.WorldScale;
+```
+
+And optionally, can be accessed directly through components. However, accessing
+the world rotation is not possible through the `LocalToWorld` component and must
+be done through `WorldRotation`:
+```cs
+uint a = ...
+LocalToWorld ltw = world.GetComponent<LocalToWorld>(a);
+Vector3 position = ltw.Position;
+Vector3 scale = ltw.Scale;
+Quaternion rotation = world.GetComponent<WorldRotation>(a).value;
 ```

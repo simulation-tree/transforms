@@ -1,6 +1,4 @@
-﻿#pragma warning disable CS8981
-using System;
-using System.Diagnostics;
+﻿using System;
 
 namespace Transforms.Components
 {
@@ -10,40 +8,95 @@ namespace Transforms.Components
     /// </summary>
     public struct Anchor : IEquatable<Anchor>
     {
-        public static readonly Anchor Centered = new(new(0.5f, false), new(0.5f, false), new(0f, false), new(0.5f, false), new(0.5f, false), new(0f, false));
-        public static readonly Anchor BottomLeft = new(new(0f, false), new(0f, false), new(0f, false), new(0f, false), new(0f, false), new(0f, false));
-        public static readonly Anchor TopRight = new(new(1f, false), new(1f, false), new(0f, false), new(1f, false), new(1f, false), new(0f, false));
-        public static readonly Anchor BottomRight = new(new(1f, false), new(0f, false), new(0f, false), new(1f, false), new(0f, false), new(0f, false));
-        public static readonly Anchor TopLeft = new(new(0f, false), new(1f, false), new(0f, false), new(0f, false), new(1f, false), new(0f, false));
-        public static readonly Anchor Bottom = new(new(0.5f, false), new(0f, false), new(0f, false), new(0.5f, false), new(0f, false), new(0f, false));
-        public static readonly Anchor Top = new(new(0.5f, false), new(1f, false), new(0f, false), new(0.5f, false), new(1f, false), new(0f, false));
-        public static readonly Anchor Left = new(new(0f, false), new(0.5f, false), new(0f, false), new(0f, false), new(0.5f, false), new(0f, false));
-        public static readonly Anchor Right = new(new(1f, false), new(0.5f, false), new(0f, false), new(1f, false), new(0.5f, false), new(0f, false));
+        /// <summary>
+        /// Centers the transform on the X and Y axes.
+        /// </summary>
+        public static readonly Anchor Centered = new(0.5f, 0.5f, 0f, 0.5f, 0.5f, 0f);
+
+        /// <summary>
+        /// Anchors the transform to the bottom left (also the <see langword="default"/>).
+        /// </summary>
+        public static readonly Anchor BottomLeft = new(0f, 0f, 0f, 0f, 0f, 0f);
+
+        /// <summary>
+        /// Anchors the transform to the top right.
+        /// </summary>
+        public static readonly Anchor TopRight = new(1f, 1f, 0f, 1f, 1f, 0f);
+
+        /// <summary>
+        /// Anchors the transform to the bottom right.
+        /// </summary>
+        public static readonly Anchor BottomRight = new(1f, 0f, 0f, 1f, 0f, 0f);
+
+        /// <summary>
+        /// Anchors the transform to the top left.
+        /// </summary>
+        public static readonly Anchor TopLeft = new(0f, 1f, 0f, 0f, 1f, 0f);
+
+        /// <summary>
+        /// Anchors the transform to the center bottom.
+        /// </summary>
+        public static readonly Anchor Bottom = new(0.5f, 0f, 0f, 0.5f, 0f, 0f);
+
+        /// <summary>
+        /// Anchors the transform to the center top.
+        /// </summary>
+        public static readonly Anchor Top = new(0.5f, 1f, 0f, 0.5f, 1f, 0f);
+
+        /// <summary>
+        /// Anchors the transform to the left middle.
+        /// </summary>
+        public static readonly Anchor Left = new(0f, 0.5f, 0f, 0f, 0.5f, 0f);
+
+        /// <summary>
+        /// Anchors the transform to the right middle.
+        /// </summary>
+        public static readonly Anchor Right = new(1f, 0.5f, 0f, 1f, 0.5f, 0f);
+
+        /// <summary>
+        /// Default value.
+        /// </summary>
         public static readonly Anchor Default = default;
 
-        public value minX;
-        public value minY;
-        public value minZ;
-        public value maxX;
-        public value maxY;
-        public value maxZ;
-
-#if NET
         /// <summary>
-        /// Creates a default anchor pointing towards bottom left.
+        /// Minimum X anchor value.
         /// </summary>
-        public Anchor()
-        {
-            minX = new(0f, false);
-            minY = new(0f, false);
-            minZ = new(0f, false);
-            maxX = new(0f, false);
-            maxY = new(0f, false);
-            maxZ = new(0f, false);
-        }
-#endif
+        public float minX;
 
-        public Anchor(value minX, value minY, value minZ, value maxX, value maxY, value maxZ)
+        /// <summary>
+        /// Minimum Y anchor value.
+        /// </summary>
+        public float minY;
+
+        /// <summary>
+        /// Minimum Z anchor value.
+        /// </summary>
+        public float minZ;
+
+        /// <summary>
+        /// Maximum X anchor value.
+        /// </summary>
+        public float maxX;
+
+        /// <summary>
+        /// Maximum Y anchor value.
+        /// </summary>
+        public float maxY;
+
+        /// <summary>
+        /// Maximum Z anchor value.
+        /// </summary>
+        public float maxZ;
+
+        /// <summary>
+        /// Flags defining which anchor values are relative.
+        /// </summary>
+        public Relativeness flags;
+
+        /// <summary>
+        /// Creates an instance of the anchor component.
+        /// </summary>
+        public Anchor(float minX, float minY, float minZ, float maxX, float maxY, float maxZ, Relativeness flags = default)
         {
             this.minX = minX;
             this.minY = minY;
@@ -51,242 +104,162 @@ namespace Transforms.Components
             this.maxX = maxX;
             this.maxY = maxY;
             this.maxZ = maxZ;
+            this.flags = flags;
         }
 
+        /// <summary>
+        /// Creates an instance of the anchor component from the parsed values.
+        /// </summary>
+        public Anchor(ReadOnlySpan<char> minX, ReadOnlySpan<char> minY, ReadOnlySpan<char> minZ, ReadOnlySpan<char> maxX, ReadOnlySpan<char> maxY, ReadOnlySpan<char> maxZ)
+        {
+            if (TryParse(minX, out this.minX, out bool relative) && relative)
+            {
+                flags |= Relativeness.MinX;
+            }
+
+            if (TryParse(minY, out this.minY, out relative) && relative)
+            {
+                flags |= Relativeness.MinY;
+            }
+
+            if (TryParse(minZ, out this.minZ, out relative) && relative)
+            {
+                flags |= Relativeness.MinZ;
+            }
+
+            if (TryParse(maxX, out this.maxX, out relative) && relative)
+            {
+                flags |= Relativeness.MaxX;
+            }
+
+            if (TryParse(maxY, out this.maxY, out relative) && relative)
+            {
+                flags |= Relativeness.MaxY;
+            }
+
+            if (TryParse(maxZ, out this.maxZ, out relative) && relative)
+            {
+                flags |= Relativeness.MaxZ;
+            }
+        }
+
+        /// <inheritdoc/>
         public readonly override bool Equals(object? obj)
         {
             return obj is Anchor anchor && Equals(anchor);
         }
 
+        /// <inheritdoc/>
         public readonly bool Equals(Anchor other)
         {
-            return minX.Equals(other.minX) && minY.Equals(other.minY) && minZ.Equals(other.minZ) && maxX.Equals(other.maxX) && maxY.Equals(other.maxY) && maxZ.Equals(other.maxZ);
+            return minX.Equals(other.minX) && minY.Equals(other.minY) && minZ.Equals(other.minZ) && maxX.Equals(other.maxX) && maxY.Equals(other.maxY) && maxZ.Equals(other.maxZ) && flags == other.flags;
         }
 
+        /// <inheritdoc/>
         public readonly override int GetHashCode()
         {
-            return HashCode.Combine(minX, minY, minZ, maxX, maxY, maxZ);
+            return HashCode.Combine(minX, minY, minZ, maxX, maxY, maxZ, flags);
         }
 
+        /// <summary>
+        /// Tries to parse the given <paramref name="text"/> as a single anchor number.
+        /// </summary>
+        public static bool TryParse(ReadOnlySpan<char> text, out float number, out bool relative)
+        {
+            if (text.Length > 0)
+            {
+                if (text[text.Length - 1] == '%')
+                {
+                    relative = true;
+                    text = text.Slice(0, text.Length - 1);
+                }
+                else
+                {
+                    relative = false;
+                }
+
+                return float.TryParse(text, out number);
+            }
+            else
+            {
+                number = default;
+                relative = false;
+                return false;
+            }
+        }
+
+        /// <inheritdoc/>
         public static bool operator ==(Anchor left, Anchor right)
         {
             return left.Equals(right);
         }
 
+        /// <inheritdoc/>
         public static bool operator !=(Anchor left, Anchor right)
         {
             return !(left == right);
         }
 
-        public struct value : IEquatable<value>
+        /// <summary>
+        /// Settings for describing which anchor numbers are relative to the parent bounds.
+        /// </summary>
+        [Flags]
+        public enum Relativeness : byte
         {
-            public const int NumberRange = 65536;
-            public const int MaxNumberValue = 32768;
-            public const float Precision = 0.00003051757f;
+            /// <summary>
+            /// No values are relative to the parent.
+            /// </summary>
+            None = 0,
 
-            private int data;
+            /// <summary>
+            /// The minimum X number is relative to the parent's left edge.
+            /// </summary>
+            MinX = 1,
 
-            public bool Absolute
-            {
-                readonly get
-                {
-                    int bitPos = 0;
-                    return (data & (1 << bitPos)) == 0;
-                }
-                set
-                {
-                    if (value)
-                    {
-                        data &= ~1;
-                    }
-                    else
-                    {
-                        data |= 1;
-                    }
-                }
-            }
+            /// <summary>
+            /// The minimum Y number is relative to the parent's bottom edge.
+            /// </summary>
+            MinY = 2,
 
-            public float Number
-            {
-                readonly get
-                {
-                    int bitPos = 0;
-                    int numberInt = data & ~(1 << bitPos);
-                    return (numberInt << 1) / (float)NumberRange;
-                }
-                set
-                {
-                    bool absolute = Absolute;
-                    int valueInt = (int)(value * NumberRange) >> 1;
-                    data = valueInt;
-                    if (absolute)
-                    {
-                        data &= ~1;
-                    }
-                    else
-                    {
-                        data |= 1;
-                    }
-                }
-            }
+            /// <summary>
+            /// The minimum Z number is relative to the parent's back edge.
+            /// </summary>
+            MinZ = 4,
 
-            public value(float number, bool fromEdge)
-            {
-                ThrowIfOutOfRange(number);
+            /// <summary>
+            /// The maximum X number is relative to the parent's right edge.
+            /// </summary>
+            MaxX = 8,
 
-                data = (int)(number * NumberRange) >> 1;
-                if (fromEdge)
-                {
-                    data &= ~1;
-                }
-                else
-                {
-                    data |= 1;
-                }
-            }
+            /// <summary>
+            /// The maximum Y number is relative to the parent's top edge.
+            /// </summary>
+            MaxY = 16,
 
-            public value(ReadOnlySpan<char> text)
-            {
-                bool negative = false;
-                int index = 0;
-                int startIndex = 0;
-                bool foundNumber = false;
-                bool absolute = true;
-                int endIndex = 0;
-                while (index < text.Length)
-                {
-                    char c = text[index];
-                    if (c == '-')
-                    {
-                        negative = true;
-                    }
-                    else if (c == '.' || char.IsDigit(c))
-                    {
-                        if (!foundNumber)
-                        {
-                            startIndex = index;
-                        }
+            /// <summary>
+            /// The maximum Z number is relative to the parent's front edge.
+            /// </summary>
+            MaxZ = 32,
 
-                        foundNumber = true;
-                        if (index == text.Length - 1)
-                        {
-                            endIndex = index + 1;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        endIndex = index;
+            /// <summary>
+            /// Both minimum and maximum X numbers are relative to the parent's left and right edges.
+            /// </summary>
+            X = MinX | MaxX,
 
-                        if (c == '%')
-                        {
-                            absolute = false;
-                            break;
-                        }
-                    }
+            /// <summary>
+            /// Both minimum and maximum Y numbers are relative to the parent's bottom and top edges.
+            /// </summary>
+            Y = MinY | MaxY,
 
-                    index++;
-                }
+            /// <summary>
+            /// Both minimum and maximum Z numbers are relative to the parent's back and front edges.
+            /// </summary>
+            Z = MinZ | MaxZ,
 
-                if (!foundNumber)
-                {
-                    throw new FormatException($"No number found in text input `{text.ToString()}`");
-                }
-
-                float number = float.Parse(text.Slice(startIndex, endIndex - startIndex));
-                if (negative)
-                {
-                    number = -number;
-                }
-
-                Absolute = absolute;
-                if (absolute)
-                {
-                    Number = number;
-                }
-                else
-                {
-                    Number = number / 100f;
-                }
-            }
-
-            public readonly override string ToString()
-            {
-                Span<char> buffer = stackalloc char[32];
-                int length = ToString(buffer);
-                return buffer.Slice(0, length).ToString();
-            }
-
-            public readonly int ToString(Span<char> destination)
-            {
-                bool isRelative = Absolute;
-                float number = Number;
-                int length = 0;
-                if (isRelative)
-                {
-                    destination[0] = 'r';
-                    destination[1] = ':';
-                    length = 2;
-                }
-                else
-                {
-                    destination[0] = 'a';
-                    destination[1] = ':';
-                    length = 2;
-                }
-
-                length += number.ToString(destination.Slice(length));
-                return length;
-            }
-
-            public readonly override bool Equals(object? obj)
-            {
-                return obj is value value && Equals(value);
-            }
-
-            public readonly bool Equals(value other)
-            {
-                return data == other.data;
-            }
-
-            public readonly override int GetHashCode()
-            {
-                return data.GetHashCode();
-            }
-
-            public static bool operator ==(value left, value right)
-            {
-                return left.Equals(right);
-            }
-
-            public static bool operator !=(value left, value right)
-            {
-                return !(left == right);
-            }
-
-            public static implicit operator float(value value)
-            {
-                return value.Number;
-            }
-
-            public static implicit operator value(ReadOnlySpan<char> text)
-            {
-                return new(text);
-            }
-
-            public static implicit operator value(string text)
-            {
-                return new(text.AsSpan());
-            }
-
-            [Conditional("DEBUG")]
-            private static void ThrowIfOutOfRange(float input)
-            {
-                if (input < -MaxNumberValue || input >= MaxNumberValue)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(input), $"Anchor value must be greater than {-MaxNumberValue} and below {MaxNumberValue}.");
-                }
-            }
+            /// <summary>
+            /// All minimum and maximum numbers are relative to the parent's edges.
+            /// </summary>
+            All = MinX | MinY | MinZ | MaxX | MaxY | MaxZ
         }
     }
 }
