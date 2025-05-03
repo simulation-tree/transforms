@@ -5,6 +5,9 @@ using Worlds;
 
 namespace Transforms
 {
+    /// <summary>
+    /// Represents an entity that can be transformed in 3D space.
+    /// </summary>
     public readonly partial struct Transform : IEntity
     {
         /// <summary>
