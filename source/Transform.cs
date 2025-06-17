@@ -190,9 +190,9 @@ namespace Transforms
         }
 
         /// <inheritdoc/>
-        public readonly int ToString(Span<char> buffer)
+        public readonly int ToString(Span<char> destination)
         {
-            return value.ToString(buffer);
+            return value.ToString(destination);
         }
     }
 }
