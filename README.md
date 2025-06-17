@@ -12,6 +12,9 @@ using data from these components, relative to the parent:
 * `Anchor`
 * `Pivot`
 
+Modifying these components wont update the `LocalToWorld` component immediately,
+requiring a system to do so with a `TransformUpdate` message.
+
 ### Axis convention
 
 This is only relevant for rotations when working with them manually:
