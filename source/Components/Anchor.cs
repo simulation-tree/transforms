@@ -158,7 +158,15 @@ namespace Transforms.Components
         /// <inheritdoc/>
         public readonly override int GetHashCode()
         {
-            return HashCode.Combine(minX, minY, minZ, maxX, maxY, maxZ, flags);
+            int hash = 17;
+            hash = hash * 31 + minX.GetHashCode();
+            hash = hash * 31 + minY.GetHashCode();
+            hash = hash * 31 + minZ.GetHashCode();
+            hash = hash * 31 + maxX.GetHashCode();
+            hash = hash * 31 + maxY.GetHashCode();
+            hash = hash * 31 + maxZ.GetHashCode();
+            hash = hash * 31 + (int)flags;
+            return hash;
         }
 
         /// <summary>
